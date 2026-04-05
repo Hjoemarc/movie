@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 import certifi
-from bson.objectid import ObjectId # REQUIRED for MongoDB IDs
+from bson.objectid import ObjectId 
 
 app = Flask(__name__)
 
@@ -15,11 +15,6 @@ try:
     movies_collection = db.movies
 except Exception as e:
     print(f"Connection failed: {e}")
-
-# ==========================================
-# CRUD ROUTES
-# ==========================================
-
 # READ: Display the page
 @app.route('/')
 def index():
