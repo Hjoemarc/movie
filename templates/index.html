@@ -8,11 +8,28 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background-color: #f4f4f4; }
+        
+        /* New styles for the form and buttons */
+        .add-form { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .add-form input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
     </style>
 </head>
 <body>
 
     <h1>Movie Database (sample_mflix)</h1>
+
+    <div class="add-form">
+        <h3>Add a New Movie</h3>
+        <form action="/add" method="POST">
+            <input type="text" name="title" placeholder="Movie Title" required>
+            <input type="number" name="year" placeholder="Release Year" required>
+            <input type="text" name="genres" placeholder="Genres (comma separated)" required>
+            <button type="submit" class="btn btn-success">Add Movie</button>
+        </form>
+    </div>
 
     <table>
         <thead>
@@ -20,7 +37,7 @@
                 <th>Title</th>
                 <th>Year</th>
                 <th>Genres</th>
-            </tr>
+                <th>Actions</th> </tr>
         </thead>
         <tbody>
             {% for movie in movies %}
@@ -28,12 +45,16 @@
                 <td>{{ movie.title }}</td>
                 <td>{{ movie.year }}</td>
                 <td>
-                    {# MongoDB stores genres as an array, so we join them #}
                     {% if movie.genres %}
-                        {{ movie.genres | join(', ') }}
+                        {{ movie.genres | join(', ') if movie.genres is iterable and movie.genres is not string else movie.genres }}
                     {% else %}
                         N/A
                     {% endif %}
+                </td>
+                <td>
+                    <form action="/delete/{{ movie._id }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Delete {{ movie.title }}?');">Delete</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
