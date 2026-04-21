@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from pymongo import MongoClient
 import certifi
 from bson.objectid import ObjectId
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 
@@ -27,8 +26,10 @@ try:
     reports = db.reports
     
     # Auto-initialize Admin account and Finished Product tracker if they don't exist
+    # Note: Password hashing removed for project simplicity
     if not users.find_one({"username": "admin"}):
-        users.insert_one({"username": "admin", "password": generate_password_hash("admin123"), "role": "Admin"})
+        users.insert_one({"username": "admin", "password": "admin123", "role": "Admin"})
+        
     if not finished_products.find_one({"product_name": "Bottled Water"}):
         finished_products.insert_one({"product_name": "Bottled Water", "quantity": 0, "date_updated": datetime.now()})
 
@@ -66,16 +67,41 @@ def index():
 
     return render_template('index.html', view=view, data=data)
 
-# AUTHENTICATION
+# AUTHENTICATION: Login
 @app.route('/login', methods=['POST'])
 def login():
-    user = users.find_one({"username": request.form.get('username')})
-    if user and check_password_hash(user['password'], request.form.get('password')):
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    user = users.find_one({"username": username})
+    
+    # Plain text password comparison
+    if user and user['password'] == password:
         session['user_id'] = str(user['_id'])
         session['username'] = user['username']
         session['role'] = user['role']
     else:
-        flash("Invalid credentials. Try admin / admin123", "danger")
+        flash("Invalid credentials. Please try again.", "danger")
+    return redirect(url_for('index'))
+
+# AUTHENTICATION: Register
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    role = request.form.get('role', 'Staff') # Default role is Staff
+    
+    # Check if username already exists
+    if users.find_one({"username": username}):
+        flash("Username already exists! Please choose another.", "danger")
+    else:
+        users.insert_one({
+            "username": username, 
+            "password": password, 
+            "role": role
+        })
+        flash("Account created successfully! You can now log in.", "success")
+        
     return redirect(url_for('index'))
 
 @app.route('/logout')
