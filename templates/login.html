@@ -11,29 +11,29 @@
     <style>
         body { 
             font-family: 'Outfit', sans-serif; 
-            background-color: #030712; /* Ultra deep slate/black */
-            color: #e2e8f0;
+            background-color: #f8fafc; /* Crisp, light slate background */
+            color: #0f172a;
         }
         
-        /* Premium Scrollbar */
+        /* Premium Light Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Form inputs autocomplete styling fix for dark mode */
+        /* Form inputs autocomplete styling fix for light mode */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus, 
         input:-webkit-autofill:active{
-            -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
-            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+            -webkit-text-fill-color: #0f172a !important;
         }
 
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="antialiased h-screen overflow-hidden selection:bg-emerald-500/30">
+<body class="antialiased h-screen overflow-hidden selection:bg-cyan-500/30">
 
 <div class="fixed top-6 right-6 z-50 flex flex-col gap-3">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -41,13 +41,13 @@
             {% for category, message in messages %}
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
                      x-transition.enter="transition ease-out duration-300" x-transition.enter-start="opacity-0 translate-x-8" x-transition.enter-end="opacity-100 translate-x-0" x-transition.leave="transition ease-in duration-200" x-transition.leave-start="opacity-100" x-transition.leave-end="opacity-0"
-                     class="flex items-center p-4 rounded-2xl shadow-2xl text-sm min-w-[320px] border backdrop-blur-xl
-                     {% if category == 'error' %} bg-red-950/80 border-red-500/50 text-red-200 {% else %} bg-emerald-950/80 border-emerald-500/50 text-emerald-200 {% endif %}">
-                    <div class="p-2 bg-white/10 rounded-full mr-3">
+                     class="flex items-center p-4 rounded-2xl shadow-xl text-sm min-w-[320px] border backdrop-blur-xl
+                     {% if category == 'error' %} bg-red-50 border-red-200 text-red-800 {% else %} bg-cyan-50 border-cyan-200 text-cyan-800 {% endif %}">
+                    <div class="p-2 rounded-full mr-3 {% if category == 'error' %} bg-red-100 text-red-600 {% else %} bg-cyan-100 text-cyan-600 {% endif %}">
                         <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <span class="flex-1 font-medium tracking-wide">{{ message }}</span>
-                    <button @click="show = false" class="ml-4 hover:text-white transition-colors">✕</button>
+                    <span class="flex-1 font-semibold tracking-wide">{{ message }}</span>
+                    <button @click="show = false" class="ml-4 hover:opacity-70 transition-opacity">✕</button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -56,28 +56,28 @@
 
 <div class="flex h-screen w-full relative" x-data="{ showLogin: true }">
     
-    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-600/20 blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-teal-600/20 blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-cyan-300/30 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-300/30 blur-[120px] pointer-events-none"></div>
 
-    <div class="hidden lg:flex w-[45%] relative bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop');">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#030712]/50 to-[#030712]"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-[#030712]/80"></div>
+    <div class="hidden lg:flex w-[45%] relative bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1548839140-29a749e1bc4e?q=80&w=2070&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/40 via-transparent to-white/10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
         
         <div class="relative z-10 flex flex-col justify-center p-16 w-full h-full">
-            <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(16,185,129,0.3)] border border-white/20">
-                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
+            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-lg border border-white/50">
+                <svg class="w-8 h-8 text-cyan-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
             </div>
-            <h1 class="text-white text-6xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-lg">
-                Clarity in <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Motion.</span>
+            <h1 class="text-white text-6xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-md">
+                Purity from <br><span class="text-cyan-300">Source to Bottle.</span>
             </h1>
-            <p class="text-slate-400 text-lg max-w-md font-light leading-relaxed">
-                The centralized command center for Ecospring. Architected for speed, built for precision, and designed for the future of manufacturing.
+            <p class="text-blue-50 text-lg max-w-md font-medium leading-relaxed drop-shadow-sm">
+                The centralized command center for Ecospring Manufacturing. Architected for efficiency, built for sustainability, and designed for pure hydration.
             </p>
         </div>
     </div>
 
     <div class="w-full lg:w-[55%] flex items-center justify-center p-8 relative overflow-y-auto z-10">
-        <div class="w-full max-w-xl bg-white/[0.03] backdrop-blur-2xl p-12 rounded-[2rem] shadow-2xl border border-white/10 min-h-[780px] flex flex-col justify-center relative ring-1 ring-white/5">
+        <div class="w-full max-w-xl bg-white/80 backdrop-blur-2xl p-12 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white min-h-[780px] flex flex-col justify-center relative ring-1 ring-slate-900/5">
             
             <div x-show="showLogin" 
                  x-transition:enter="transition ease-out duration-500 delay-150" 
@@ -89,32 +89,32 @@
                  class="w-full absolute inset-0 p-12 flex flex-col justify-center">
                 
                 <div class="mb-10 text-center">
-                    <h2 class="text-3xl font-extrabold text-white mb-2 tracking-tight">Access Portal</h2>
-                    <p class="text-slate-400 font-medium text-sm">Authenticate to enter the production network.</p>
+                    <h2 class="text-3xl font-extrabold text-slate-800 mb-2 tracking-tight">Access Portal</h2>
+                    <p class="text-slate-500 font-medium text-sm">Authenticate to enter the production network.</p>
                 </div>
                 
                 <form method="POST" action="/login" class="space-y-6">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">System Username</label>
-                        <input type="text" name="username" required class="w-full px-5 py-4 rounded-xl border border-slate-700/50 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-white font-medium bg-[#0f172a]/50 placeholder-slate-600 shadow-inner">
+                        <input type="text" name="username" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 font-medium bg-white placeholder-slate-400 shadow-sm">
                     </div>
                     <div>
                         <div class="flex justify-between items-center mb-2 ml-1 mr-1">
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest">Security Passkey</label>
-                            <a href="#" class="text-xs font-semibold text-teal-400 hover:text-teal-300 transition-colors">Forgot?</a>
+                            <a href="#" class="text-xs font-semibold text-cyan-600 hover:text-cyan-700 transition-colors">Forgot?</a>
                         </div>
-                        <input type="password" name="password" required class="w-full px-5 py-4 rounded-xl border border-slate-700/50 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-white font-medium bg-[#0f172a]/50 placeholder-slate-600 shadow-inner">
+                        <input type="password" name="password" required class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 font-medium bg-white placeholder-slate-400 shadow-sm">
                     </div>
                     
-                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-900 font-extrabold py-4 px-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all duration-300 mt-6 tracking-wide">
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-extrabold py-4 px-4 rounded-xl shadow-[0_8px_20px_rgba(6,182,212,0.25)] hover:shadow-[0_10px_25px_rgba(6,182,212,0.35)] transition-all duration-300 mt-6 tracking-wide">
                         INITIALIZE SESSION
                     </button>
                 </form>
                 
                 <div class="mt-12 text-center">
-                    <p class="text-sm font-medium text-slate-400">
+                    <p class="text-sm font-medium text-slate-500">
                         Require system access? 
-                        <button @click="showLogin = false" type="button" class="text-emerald-400 hover:text-emerald-300 font-bold transition-colors ml-1 border-b border-emerald-400/30 hover:border-emerald-300 pb-0.5">Register Node</button>
+                        <button @click="showLogin = false" type="button" class="text-cyan-600 hover:text-cyan-700 font-bold transition-colors ml-1 border-b border-cyan-300 hover:border-cyan-500 pb-0.5">Register Node</button>
                     </p>
                 </div>
             </div>
@@ -129,34 +129,34 @@
                  class="w-full absolute inset-0 p-12 flex flex-col justify-center" style="display: none;">
                 
                 <div class="mb-8 text-center">
-                    <h2 class="text-3xl font-extrabold text-white mb-2 tracking-tight">Register Node</h2>
-                    <p class="text-slate-400 font-medium text-sm">Provision your account in the Ecospring database.</p>
+                    <h2 class="text-3xl font-extrabold text-slate-800 mb-2 tracking-tight">Register Node</h2>
+                    <p class="text-slate-500 font-medium text-sm">Provision your account in the Ecospring database.</p>
                 </div>
                 
                 <form method="POST" action="/register" class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">First Name</label>
-                            <input type="text" name="first_name" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                            <input type="text" name="first_name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Last Name</label>
-                            <input type="text" name="last_name" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                            <input type="text" name="last_name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Employee ID</label>
-                            <input type="text" name="employee_id" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-emerald-300 font-bold text-sm bg-[#0f172a]/50">
+                            <input type="text" name="employee_id" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-cyan-700 font-bold text-sm bg-cyan-50 shadow-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Gender</label>
-                            <select name="gender" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-slate-200 text-sm bg-[#0f172a]/50 appearance-none">
-                                <option value="" disabled selected class="text-slate-500">Select...</option>
-                                <option value="Male" class="bg-slate-900 text-white">Male</option>
-                                <option value="Female" class="bg-slate-900 text-white">Female</option>
-                                <option value="Other" class="bg-slate-900 text-white">Other</option>
+                            <select name="gender" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm appearance-none">
+                                <option value="" disabled selected class="text-slate-400">Select...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                     </div>
@@ -164,44 +164,44 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Email</label>
-                            <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                            <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Phone</label>
-                            <input type="text" name="phone" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                            <input type="text" name="phone" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Username</label>
-                            <input type="text" name="username" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                            <input type="text" name="username" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Password</label>
-                            <input type="password" name="password" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                            <input type="password" name="password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 text-sm bg-white shadow-sm">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Clearance Level</label>
-                        <select name="role" required class="w-full px-4 py-3.5 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-emerald-300 font-bold text-sm bg-[#0f172a]/50 appearance-none">
-                            <option value="Inventory Staff" class="bg-slate-900 text-white">Inventory Staff</option>
-                            <option value="Production" class="bg-slate-900 text-white">Production</option>
-                            <option value="Warehouse" class="bg-slate-900 text-white">Warehouse</option>
-                            <option value="Admin" class="bg-slate-900 text-emerald-400">System Administrator</option>
+                        <select name="role" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all text-slate-800 font-semibold text-sm bg-white shadow-sm appearance-none">
+                            <option value="Inventory Staff">Inventory Staff</option>
+                            <option value="Production">Production</option>
+                            <option value="Warehouse">Warehouse</option>
+                            <option value="Admin" class="text-cyan-700 font-bold">System Administrator</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="w-full bg-white hover:bg-slate-200 text-[#030712] font-extrabold py-4 px-4 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-colors duration-200 mt-4 tracking-wide">
+                    <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold py-4 px-4 rounded-xl shadow-lg transition-colors duration-200 mt-4 tracking-wide">
                         PROVISION ACCOUNT
                     </button>
                 </form>
                 
                 <div class="mt-6 text-center">
-                    <p class="text-sm font-medium text-slate-400">
+                    <p class="text-sm font-medium text-slate-500">
                         Node already registered? 
-                        <button @click="showLogin = true" type="button" class="text-teal-400 hover:text-teal-300 font-bold transition-colors ml-1 border-b border-teal-400/30 hover:border-teal-300 pb-0.5">Return to Login</button>
+                        <button @click="showLogin = true" type="button" class="text-cyan-600 hover:text-cyan-700 font-bold transition-colors ml-1 border-b border-cyan-300 hover:border-cyan-500 pb-0.5">Return to Login</button>
                     </p>
                 </div>
             </div>
