@@ -3,39 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecospring | Bottled Water Manufacturing</title>
+    <title>Ecospring | Premium Manufacturing</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        body { font-family: 'Outfit', sans-serif; background-color: #f0f4f8; }
+        
+        /* Premium Glass Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-        /* Custom Scrollbar for a cleaner look */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Image Hover Zoom */
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom-container .bg-image { transition: transform 0.6s ease; }
+        .img-zoom-container:hover .bg-image { transform: scale(1.1); }
     </style>
 </head>
 <body class="text-slate-800 antialiased h-screen overflow-hidden">
 
-<div class="fixed top-5 right-5 z-50 flex flex-col gap-2">
+<div class="fixed top-5 right-5 z-[100] flex flex-col gap-3">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
                      x-transition.duration.500ms
-                     class="flex items-center p-4 rounded-lg shadow-lg text-sm text-white min-w-[300px]
-                     {% if category == 'error' %} bg-red-500 {% else %} bg-emerald-500 {% endif %}">
-                    <span class="flex-1 font-medium">{{ message }}</span>
-                    <button @click="show = false" class="ml-4 text-white hover:text-gray-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
+                     class="flex items-center p-4 rounded-xl shadow-2xl text-sm text-white min-w-[320px] backdrop-blur-md
+                     {% if category == 'error' %} bg-red-600/90 border border-red-400 {% else %} bg-emerald-600/90 border border-emerald-400 {% endif %}">
+                    <span class="flex-1 font-semibold tracking-wide">{{ message }}</span>
+                    <button @click="show = false" class="ml-4 text-white hover:text-gray-200 transition-colors">✕</button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -43,234 +57,265 @@
 </div>
 
 {% if view == 'login' %}
-<div class="flex h-screen w-full" x-data="{ showLogin: true }">
+<div class="relative flex h-screen w-full overflow-hidden" x-data="{ showLogin: true }">
     
-    <div class="hidden lg:flex w-1/2 relative bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1548842416-8c4600216503?q=80&w=2070&auto=format&fit=crop');">
-        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/70 to-slate-900/90"></div>
-        
-        <div class="relative z-10 flex flex-col justify-center px-16 w-full">
-            <div class="glassmorphism p-10 rounded-2xl max-w-lg shadow-2xl text-white">
-                <div class="flex items-center gap-3 mb-2">
-                    <svg class="w-10 h-10 text-blue-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
-                    <h1 class="text-4xl font-bold tracking-tight">Ecospring</h1>
+    <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+        <source src="https://cdn.pixabay.com/video/2019/04/10/22699-330541783_large.mp4" type="video/mp4">
+    </video>
+    
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/60 to-cyan-900/80 z-0"></div>
+
+    <div class="relative z-10 flex w-full h-full">
+        <div class="hidden lg:flex w-1/2 flex-col justify-center px-20">
+            <div class="glass-panel p-12 rounded-3xl text-white max-w-xl transform transition hover:-translate-y-2 duration-500">
+                <div class="inline-flex items-center justify-center p-4 bg-white/10 rounded-2xl mb-6 backdrop-blur-sm border border-white/20">
+                    <svg class="w-12 h-12 text-cyan-300 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
                 </div>
-                <h2 class="text-lg font-medium text-blue-100 tracking-wider uppercase mb-6 border-b border-blue-400/30 pb-4">Bottled Water Manufacturing</h2>
-                <p class="text-slate-200 leading-relaxed text-sm">
-                    Welcome to the next generation of inventory and production management. Streamline your supply chain, track materials in real-time, and execute production seamlessly.
+                <h1 class="text-5xl font-extrabold tracking-tight mb-2 drop-shadow-md">Ecospring.</h1>
+                <h2 class="text-xl font-semibold text-cyan-200 tracking-widest uppercase mb-6 drop-shadow">Bottled Water Manufacturing</h2>
+                <p class="text-slate-100 text-lg leading-relaxed font-light opacity-90">
+                    Experience clarity in your supply chain. Monitor raw materials, track production yields, and manage warehouse operations with seamless precision.
                 </p>
             </div>
         </div>
-    </div>
 
-    <div class="w-full lg:w-1/2 flex items-center justify-center bg-white p-8 overflow-y-auto">
-        <div class="w-full max-w-md">
-            
-            <div x-show="showLogin" x-transition.opacity.duration.400ms>
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Sign in to your account</h2>
-                    <p class="text-slate-500">Enter your credentials to access the system.</p>
-                </div>
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <div class="glass-card w-full max-w-md p-10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative overflow-hidden">
                 
-                <form method="POST" action="/login" class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
-                        <input type="text" name="username" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50">
+                <div x-show="showLogin" x-transition.opacity.duration.500ms>
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-extrabold text-slate-800 mb-2">Welcome Back</h2>
+                        <p class="text-slate-500 font-medium">Access your operations dashboard.</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                        <input type="password" name="password" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50">
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
-                        Sign In
-                    </button>
-                </form>
-                
-                <div class="mt-8 text-center">
-                    <p class="text-sm text-slate-500">
-                        Don't have an account? 
-                        <button @click="showLogin = false" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">Create one here</button>
-                    </p>
-                </div>
-            </div>
-
-            <div x-show="!showLogin" x-transition.opacity.duration.400ms style="display: none;">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Create Account</h2>
-                    <p class="text-slate-500">Join the Ecospring team today.</p>
-                </div>
-                
-                <form method="POST" action="/register" class="space-y-4">
-                    <div class="flex gap-4">
-                        <div class="w-1/2">
-                            <label class="block text-sm font-medium text-slate-700 mb-1">First Name</label>
-                            <input type="text" name="first_name" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50">
+                    
+                    <form method="POST" action="/login" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Username</label>
+                            <input type="text" name="username" required class="w-full px-5 py-3.5 rounded-xl border-2 border-slate-200 focus:ring-0 focus:border-cyan-500 outline-none transition-all bg-white/50 text-slate-800 font-medium">
                         </div>
-                        <div class="w-1/2">
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
-                            <input type="text" name="last_name" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Password</label>
+                            <input type="password" name="password" required class="w-full px-5 py-3.5 rounded-xl border-2 border-slate-200 focus:ring-0 focus:border-cyan-500 outline-none transition-all bg-white/50 text-slate-800 font-medium">
                         </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold py-4 px-4 rounded-xl shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-1 mt-2">
+                            Enter System
+                        </button>
+                    </form>
+                    
+                    <div class="mt-8 text-center">
+                        <p class="text-sm font-medium text-slate-500">
+                            New employee? 
+                            <button @click="showLogin = false" class="text-cyan-600 hover:text-cyan-800 font-bold ml-1 transition-colors">Register Profile</button>
+                        </p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
-                        <input type="text" name="username" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                        <input type="password" name="password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">System Role</label>
-                        <select name="role" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50 text-slate-700">
-                            <option value="Inventory Staff">Inventory Staff</option>
-                            <option value="Production">Production</option>
-                            <option value="Warehouse">Warehouse</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-colors duration-200 mt-2">
-                        Create Account
-                    </button>
-                </form>
-                
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-slate-500">
-                        Already have an account? 
-                        <button @click="showLogin = true" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">Sign in</button>
-                    </p>
                 </div>
-            </div>
 
+                <div x-show="!showLogin" x-transition.opacity.duration.500ms style="display: none;">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-extrabold text-slate-800 mb-2">Create Profile</h2>
+                    </div>
+                    
+                    <form method="POST" action="/register" class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="w-1/2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">First Name</label>
+                                <input type="text" name="first_name" required class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-cyan-500 outline-none bg-white/50">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Last Name</label>
+                                <input type="text" name="last_name" required class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-cyan-500 outline-none bg-white/50">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Username</label>
+                            <input type="text" name="username" required class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-cyan-500 outline-none bg-white/50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Password</label>
+                            <input type="password" name="password" required class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-cyan-500 outline-none bg-white/50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Department Role</label>
+                            <select name="role" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-cyan-500 outline-none bg-white/50 font-medium text-slate-700 cursor-pointer">
+                                <option value="Inventory Staff">Inventory Staff</option>
+                                <option value="Production">Production</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Admin">System Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-4 rounded-xl shadow-lg hover:shadow-slate-500/30 transition-all duration-300 transform hover:-translate-y-1 mt-4">
+                            Register Account
+                        </button>
+                    </form>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-sm font-medium text-slate-500">
+                            Already configured? 
+                            <button @click="showLogin = true" class="text-cyan-600 hover:text-cyan-800 font-bold ml-1 transition-colors">Sign in</button>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
 {% else %}
-<div class="flex h-screen bg-slate-50">
+<div class="flex h-screen bg-slate-50 overflow-hidden">
     
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-2xl z-20">
-        <div class="h-20 flex items-center px-6 border-b border-slate-800">
-            <svg class="w-8 h-8 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
+    <aside class="w-72 bg-[#0B1120] text-slate-300 flex flex-col shadow-2xl z-20 relative">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        
+        <div class="h-24 flex items-center px-8 border-b border-white/10 relative z-10">
+            <div class="p-2 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl mr-3 shadow-lg shadow-cyan-500/30">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
+            </div>
             <div>
-                <h1 class="text-white font-bold text-lg leading-tight">Ecospring</h1>
-                <span class="text-[10px] uppercase tracking-widest text-slate-400 block">Manufacturing</span>
+                <h1 class="text-white font-extrabold text-xl tracking-wide">Ecospring</h1>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-cyan-400 block font-bold">Manufacturing</span>
             </div>
         </div>
         
-        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            <a href="/?view=dashboard" class="flex items-center px-4 py-3 rounded-lg transition-colors {% if view == 'dashboard' %}bg-blue-600 text-white font-medium{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                Dashboard
+        <nav class="flex-1 px-4 py-8 space-y-3 relative z-10 overflow-y-auto">
+            <a href="/?view=dashboard" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 {% if view == 'dashboard' %}bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold shadow-lg shadow-cyan-500/20{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
+                <svg class="w-5 h-5 mr-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Operations Dashboard
             </a>
-            <a href="/?view=inventory" class="flex items-center px-4 py-3 rounded-lg transition-colors {% if view == 'inventory' %}bg-blue-600 text-white font-medium{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                Raw Materials
+            <a href="/?view=inventory" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 {% if view == 'inventory' %}bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold shadow-lg shadow-cyan-500/20{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
+                <svg class="w-5 h-5 mr-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                Material Inventory
             </a>
-            <a href="/?view=production" class="flex items-center px-4 py-3 rounded-lg transition-colors {% if view == 'production' %}bg-blue-600 text-white font-medium{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                Production
+            <a href="/?view=production" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 {% if view == 'production' %}bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold shadow-lg shadow-cyan-500/20{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
+                <svg class="w-5 h-5 mr-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                Production Line
             </a>
-            
-            <div class="pt-6 mt-6 border-t border-slate-800">
-                <span class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Coming Soon</span>
-                <a href="#" class="flex items-center px-4 py-3 mt-2 text-slate-500 cursor-not-allowed">Suppliers</a>
-                <a href="#" class="flex items-center px-4 py-3 text-slate-500 cursor-not-allowed">Reports</a>
-            </div>
         </nav>
         
-        <div class="p-4 border-t border-slate-800">
-            <a href="/logout" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-red-400 bg-red-400/10 rounded-lg hover:bg-red-400/20 transition-colors">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Log Out
+        <div class="p-6 border-t border-white/10 relative z-10">
+            <a href="/logout" class="flex items-center justify-center w-full px-4 py-3 text-sm font-bold text-red-400 bg-red-950/40 border border-red-900/50 rounded-xl hover:bg-red-900/40 hover:text-red-300 transition-all">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Secure Logout
             </a>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
         
-        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 flex-shrink-0">
-            <h2 class="text-2xl font-bold text-slate-800 capitalize tracking-tight">{{ view }} Overview</h2>
-            <div class="flex items-center gap-4">
+        <header class="h-24 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-10 z-10 flex-shrink-0">
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-800 capitalize tracking-tight">{{ view }}</h2>
+                <p class="text-slate-500 font-medium text-sm mt-1">Real-time factory metrics and controls</p>
+            </div>
+            <div class="flex items-center gap-5 bg-slate-50 py-2 px-4 rounded-full border border-slate-100 shadow-sm">
                 <div class="text-right">
-                    <p class="text-sm font-bold text-slate-800">{{ session.get('full_name') }}</p>
-                    <p class="text-xs font-medium text-blue-600 bg-blue-50 inline-block px-2 py-0.5 rounded-full mt-0.5">{{ session.get('role') }}</p>
+                    <p class="text-sm font-extrabold text-slate-800">{{ session.get('full_name') }}</p>
+                    <p class="text-xs font-bold text-cyan-600 uppercase tracking-wider">{{ session.get('role') }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center text-slate-600 font-bold uppercase">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 shadow-md flex items-center justify-center text-white font-extrabold text-lg border-2 border-white">
                     {{ session.get('full_name', 'U')[0] }}
                 </div>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-8">
+        <div class="flex-1 overflow-y-auto p-10 pb-20">
             
             {% if view == 'dashboard' %}
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Raw Materials</h3>
-                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>
+                
+                <div class="img-zoom-container relative overflow-hidden rounded-2xl shadow-lg border border-slate-200 h-48 flex flex-col justify-end group">
+                    <div class="bg-image absolute inset-0 w-full h-full bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1623015494297-c87aeb4a75be?q=80&w=800&auto=format&fit=crop');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                    <div class="relative z-10 p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-widest">Raw Materials</h3>
+                            <span class="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]"></span>
+                        </div>
+                        <p class="text-4xl font-extrabold text-white">{{ data.total_raw }} <span class="text-lg font-medium text-slate-400">Items</span></p>
                     </div>
-                    <p class="text-4xl font-bold text-slate-800">{{ data.total_raw }} <span class="text-lg font-medium text-slate-400">Items</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Finished Products</h3>
-                        <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg></div>
+
+                <div class="img-zoom-container relative overflow-hidden rounded-2xl shadow-lg border border-slate-200 h-48 flex flex-col justify-end group">
+                    <div class="bg-image absolute inset-0 w-full h-full bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1548842416-8c4600216503?q=80&w=800&auto=format&fit=crop');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-emerald-900 via-slate-900/60 to-transparent"></div>
+                    <div class="relative z-10 p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-emerald-200 uppercase tracking-widest">Finished Products</h3>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+                        </div>
+                        <p class="text-4xl font-extrabold text-white">{{ data.total_finished }} <span class="text-lg font-medium text-emerald-100/50">Bottles</span></p>
                     </div>
-                    <p class="text-4xl font-bold text-slate-800">{{ data.total_finished }} <span class="text-lg font-medium text-slate-400">Bottles</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Stock Alerts</h3>
-                        <div class="p-2 bg-red-50 text-red-600 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+
+                <div class="relative overflow-hidden rounded-2xl shadow-lg h-48 flex flex-col justify-end bg-gradient-to-br from-red-500 to-orange-600">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <div class="relative z-10 p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-red-100 uppercase tracking-widest">Low Stock Alerts</h3>
+                            <svg class="w-5 h-5 text-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <p class="text-4xl font-extrabold text-white">{{ data.low_stock }} <span class="text-lg font-medium text-red-200">Warnings</span></p>
                     </div>
-                    <p class="text-4xl font-bold text-slate-800">{{ data.low_stock }} <span class="text-lg font-medium text-slate-400">Low</span></p>
                 </div>
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Today's Production</h3>
-                        <div class="p-2 bg-purple-50 text-purple-600 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+
+                <div class="relative overflow-hidden rounded-2xl shadow-lg h-48 flex flex-col justify-end bg-gradient-to-br from-indigo-600 to-purple-700">
+                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <div class="relative z-10 p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xs font-bold text-indigo-200 uppercase tracking-widest">Today's Output</h3>
+                            <svg class="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <p class="text-4xl font-extrabold text-white">{{ data.today_prod }} <span class="text-lg font-medium text-indigo-200">Bottles</span></p>
                     </div>
-                    <p class="text-4xl font-bold text-slate-800">{{ data.today_prod }} <span class="text-lg font-medium text-slate-400">Bottles</span></p>
+                </div>
+            </div>
+
+            <div class="mt-10 rounded-3xl overflow-hidden shadow-xl border border-slate-200 relative h-72">
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1574000305886-4f71a9386b1f?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-transparent"></div>
+                <div class="relative z-10 p-12 flex flex-col justify-center h-full max-w-xl">
+                    <h2 class="text-3xl font-extrabold text-white mb-3">Facility Status: <span class="text-emerald-400">Operational</span></h2>
+                    <p class="text-slate-300 font-medium">All filtration and bottling lines are currently running at optimal capacity. Ensure materials are reordered before dropping below alert thresholds.</p>
                 </div>
             </div>
 
             {% elif view == 'inventory' %}
             <div x-data="{ addModal: false }">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-slate-800">Current Stock</h3>
-                    <button @click="addModal = true" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        Add Material
+                    <h3 class="text-2xl font-extrabold text-slate-800">Current Stock Levels</h3>
+                    <button @click="addModal = true" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Add New Material
                     </button>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
-                                <th class="p-4 font-semibold">Material Name</th>
-                                <th class="p-4 font-semibold">Quantity</th>
-                                <th class="p-4 font-semibold">Unit</th>
-                                <th class="p-4 font-semibold">Status</th>
-                                <th class="p-4 font-semibold text-right">Actions</th>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-widest font-bold">
+                                <th class="p-5">Material Name</th>
+                                <th class="p-5">Quantity</th>
+                                <th class="p-5">Unit</th>
+                                <th class="p-5">Status</th>
+                                <th class="p-5 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm divide-y divide-slate-100">
                             {% for item in data.materials %}
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-4 font-bold text-slate-800">{{ item.name }}</td>
-                                <td class="p-4 text-slate-600">{{ item.quantity }}</td>
-                                <td class="p-4 text-slate-500">{{ item.unit }}</td>
-                                <td class="p-4">
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="p-5 font-extrabold text-slate-800 text-base">{{ item.name }}</td>
+                                <td class="p-5 font-bold text-slate-600">{{ item.quantity }}</td>
+                                <td class="p-5 text-slate-500 font-medium">{{ item.unit }}</td>
+                                <td class="p-5">
                                     {% if item.quantity <= item.reorder_level %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Low Stock</span>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200">⚠ Low Stock</span>
                                     {% else %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Healthy</span>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ Healthy</span>
                                     {% endif %}
                                 </td>
-                                <td class="p-4 text-right">
+                                <td class="p-5 text-right">
                                     <form action="/delete_material/{{ item._id }}" method="POST" class="inline">
-                                        <button type="submit" onclick="return confirm('Delete {{ item.name }}?');" class="text-red-500 hover:text-red-700 font-medium text-xs uppercase">Delete</button>
+                                        <button type="submit" onclick="return confirm('Delete {{ item.name }}?');" class="text-red-500 hover:text-red-700 font-bold text-xs uppercase tracking-wider bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 transition-colors">Remove</button>
                                     </form>
                                 </td>
                             </tr>
@@ -281,32 +326,31 @@
 
                 <div x-show="addModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
                     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-                        <div x-show="addModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-slate-900/50 backdrop-blur-sm" @click="addModal = false"></div>
-
-                        <div x-show="addModal" x-transition class="relative inline-block w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                            <h3 class="text-lg font-bold leading-6 text-slate-900 mb-4">Add Raw Material</h3>
-                            <form method="POST" action="/add_material" class="space-y-4">
+                        <div x-show="addModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="addModal = false"></div>
+                        <div x-show="addModal" x-transition class="relative inline-block w-full max-w-lg p-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl">
+                            <h3 class="text-2xl font-extrabold text-slate-900 mb-6">Add Raw Material</h3>
+                            <form method="POST" action="/add_material" class="space-y-5">
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Material Name</label>
-                                    <input type="text" name="name" placeholder="e.g., Labels, Caps" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Material Name</label>
+                                    <input type="text" name="name" required class="w-full px-5 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none font-medium">
                                 </div>
-                                <div class="flex gap-4">
+                                <div class="flex gap-5">
                                     <div class="w-1/2">
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Quantity</label>
-                                        <input type="number" name="quantity" placeholder="0" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Quantity</label>
+                                        <input type="number" name="quantity" required class="w-full px-5 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none font-medium">
                                     </div>
                                     <div class="w-1/2">
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Unit</label>
-                                        <input type="text" name="unit" placeholder="pcs" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Unit</label>
+                                        <input type="text" name="unit" placeholder="e.g. pcs" required class="w-full px-5 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none font-medium">
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Reorder Alert Level</label>
-                                    <input type="number" name="reorder_level" placeholder="100" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Reorder Alert Level</label>
+                                    <input type="number" name="reorder_level" required class="w-full px-5 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none font-medium">
                                 </div>
-                                <div class="mt-6 flex justify-end gap-3">
-                                    <button type="button" @click="addModal = false" class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200">Cancel</button>
-                                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm">Save Material</button>
+                                <div class="mt-8 flex justify-end gap-3">
+                                    <button type="button" @click="addModal = false" class="px-6 py-3 font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200">Cancel</button>
+                                    <button type="submit" class="px-6 py-3 font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30">Save Material</button>
                                 </div>
                             </form>
                         </div>
@@ -315,52 +359,55 @@
             </div>
 
             {% elif view == 'production' %}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <div class="col-span-1">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Execute Batch</h3>
-                        <p class="text-sm text-slate-500 mb-6">Enter the total number of bottles for this batch. The system will automatically deduct corresponding labels, caps, and bottles.</p>
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 sticky top-10">
+                        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-slate-800 mb-2">Execute Batch</h3>
+                        <p class="text-slate-500 font-medium mb-8 leading-relaxed">Enter the total number of bottles to produce. The system will automatically compute and deduct the required raw materials.</p>
                         
-                        <form method="POST" action="/produce" class="space-y-4">
+                        <form method="POST" action="/produce" class="space-y-6">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Target Quantity (Bottles)</label>
-                                <div class="relative">
-                                    <input type="number" name="quantity" required min="1" class="w-full px-4 py-3 pl-12 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none font-bold text-slate-800 text-lg">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                    </div>
-                                </div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Target Quantity (Bottles)</label>
+                                <input type="number" name="quantity" required min="1" class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:border-emerald-500 outline-none font-extrabold text-slate-800 text-2xl text-center shadow-inner">
                             </div>
-                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors duration-200 uppercase tracking-wide text-sm mt-2">
-                                Start Production Run
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 px-4 rounded-xl shadow-lg shadow-emerald-500/30 transition-transform transform hover:-translate-y-1 uppercase tracking-widest text-sm">
+                                Start Production
                             </button>
                         </form>
                     </div>
                 </div>
 
-                <div class="col-span-1 lg:col-span-2">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div class="p-6 border-b border-slate-100">
-                            <h3 class="text-lg font-bold text-slate-800">Recent Production History</h3>
+                <div class="col-span-1 xl:col-span-2">
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-8 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="text-xl font-extrabold text-slate-800">Recent Production Logs</h3>
                         </div>
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
-                                    <th class="p-4 font-semibold">Timestamp</th>
-                                    <th class="p-4 font-semibold">Yield</th>
-                                    <th class="p-4 font-semibold text-right">Operator</th>
+                                <tr class="bg-white border-b border-slate-200 text-slate-400 text-xs uppercase tracking-widest font-bold">
+                                    <th class="p-6">Timestamp</th>
+                                    <th class="p-6">Yield Output</th>
+                                    <th class="p-6 text-right">Machine Operator</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm divide-y divide-slate-100">
                                 {% for record in data.history %}
-                                <tr class="hover:bg-slate-50 transition-colors">
-                                    <td class="p-4 text-slate-500">{{ record.date }}</td>
-                                    <td class="p-4">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="p-6 text-slate-500 font-medium">{{ record.date }}</td>
+                                    <td class="p-6">
+                                        <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                             +{{ record.quantity_produced }} Bottles
                                         </span>
                                     </td>
-                                    <td class="p-4 text-right font-medium text-slate-700">{{ record.produced_by }}</td>
+                                    <td class="p-6 text-right font-bold text-slate-700">
+                                        <div class="flex items-center justify-end gap-3">
+                                            <span>{{ record.produced_by }}</span>
+                                            <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">{{ record.produced_by[0] }}</div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
