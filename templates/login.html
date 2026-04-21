@@ -48,29 +48,11 @@
             font-size: 0.95rem;
             width: 100%;
             outline: none;
-            height: 44px; /* Fixed height to prevent shifting */
-            line-height: 1.5;
         }
         
         .spacer-input:focus {
             border-bottom-color: #3b82f6;
             box-shadow: 0 1px 0 0 #3b82f6;
-        }
-        
-        /* Form groups with consistent spacing */
-        .form-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-        
-        /* Error message styling - fixed height to prevent layout shift */
-        .error-message {
-            min-height: 20px;
-            margin-top: 0.25rem;
-            font-size: 0.75rem;
-            line-height: 1.25;
-            color: #ef4444;
-            transition: all 0.15s ease;
         }
         
         /* Select dropdown styling */
@@ -86,7 +68,6 @@
             width: 100%;
             outline: none;
             transition: all 0.2s ease;
-            height: 44px;
         }
         
         .custom-select:focus {
@@ -146,30 +127,13 @@
         
         [x-cloak] { display: none !important; }
         
-        /* Fixed transition container */
-        .form-transition-container {
-            position: relative;
-            width: 100%;
-            min-height: 580px; /* Minimum height to prevent container collapse */
-        }
-        
-        /* Individual form wrapper */
-        .form-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        
         /* Smooth cross-fade transitions */
         .fade-enter-active, .fade-leave-active {
-            transition: opacity 0.25s ease-in-out;
+            transition: opacity 0.3s ease-in-out;
         }
         
         .fade-enter-from, .fade-leave-to {
             opacity: 0;
-        }
-        
-        .fade-enter-to, .fade-leave-from {
-            opacity: 1;
         }
         
         /* Toast animation */
@@ -187,37 +151,32 @@
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* Fix for any overflow */
-        .form-container {
-            max-width: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
+        /* Error message styling */
+        .error-text {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            min-height: 1.25rem;
         }
         
-        input, select, button {
-            font-family: inherit;
+        /* Form container - ensures it fills space */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100%;
+            width: 100%;
         }
         
-        /* Label styling */
-        .input-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #334155;
-            margin-bottom: 0.25rem;
-        }
-        
-        /* Container height stabilization */
-        .auth-container {
-            min-height: 760px;
-            height: auto;
-            max-height: 90vh;
+        /* Make both forms fill available space */
+        .auth-form {
+            width: 100%;
         }
     </style>
 </head>
 <body class="antialiased h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 to-slate-200">
 
-<div class="flex w-full max-w-6xl auth-container bg-white rounded-3xl shadow-2xl overflow-hidden" 
+<div class="flex w-full max-w-6xl h-[760px] bg-white rounded-3xl shadow-2xl overflow-hidden" 
      x-data="authApp()" 
      x-init="init()"
      x-cloak>
@@ -246,36 +205,36 @@
         </div>
     </div>
 
-    <!-- RIGHT FORM SECTION - Fixed with absolute positioning for smooth transitions -->
-    <div class="w-full lg:w-[60%] flex items-center bg-white px-6 sm:px-10 lg:px-14 form-container">
-        <div class="form-transition-container w-full py-8">
+    <!-- RIGHT FORM SECTION - Now fills entire space -->
+    <div class="w-full lg:w-[60%] flex items-stretch bg-white">
+        <div class="w-full h-full flex flex-col justify-center px-6 sm:px-10 lg:px-14 py-8 overflow-y-auto">
             
             <!-- LOGIN FORM -->
             <div x-show="showLogin" 
                  x-transition:enter="fade-enter-active"
                  x-transition:enter-start="fade-enter-from"
-                 x-transition:enter-end="fade-enter-to"
+                 x-transition:enter-end="opacity-100"
                  x-transition:leave="fade-leave-active"
-                 x-transition:leave-start="fade-leave-from"
+                 x-transition:leave-start="opacity-100"
                  x-transition:leave-end="fade-leave-to"
-                 class="form-wrapper">
+                 class="auth-form">
                 
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Welcome back</h2>
                     <p class="text-slate-500 text-sm mt-1">Sign in to access your command center</p>
                 </div>
                 
-                <form @submit.prevent="handleLogin" class="space-y-1">
-                    <div class="form-group">
-                        <label class="input-label">Username / Email</label>
+                <form @submit.prevent="handleLogin" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Username / Email</label>
                         <input type="text" x-model="loginData.username" placeholder="john.doe@ecospring.com" class="spacer-input">
-                        <div class="error-message">
+                        <div class="error-text">
                             <span x-show="errors.loginUsername" x-text="errors.loginUsername"></span>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label class="input-label">Password</label>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
                         <div class="relative">
                             <input :type="showPassword ? 'text' : 'password'" x-model="loginData.password" placeholder="••••••••" class="spacer-input pr-8">
                             <button type="button" @click="showPassword = !showPassword" class="password-toggle">
@@ -283,12 +242,12 @@
                                 <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
                             </button>
                         </div>
-                        <div class="error-message">
+                        <div class="error-text">
                             <span x-show="errors.loginPassword" x-text="errors.loginPassword"></span>
                         </div>
                     </div>
                     
-                    <div class="flex items-center justify-between mt-6">
+                    <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
                             <input type="checkbox" x-model="loginData.remember" class="custom-checkbox"> 
                             <span>Remember me</span>
@@ -296,12 +255,12 @@
                         <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
                     </div>
                     
-                    <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold shadow-md transition-all flex justify-center items-center gap-2 mt-6" :disabled="loading">
+                    <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold shadow-md transition-all flex justify-center items-center gap-2" :disabled="loading">
                         <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         <span x-text="loading ? 'Authenticating...' : 'Sign In'"></span>
                     </button>
                     
-                    <div class="text-center pt-4">
+                    <div class="text-center pt-3">
                         <p class="text-sm text-slate-500">New to Ecospring? 
                             <button type="button" @click="switchToRegister" class="text-blue-600 font-semibold hover:underline">Create account</button>
                         </p>
@@ -313,66 +272,66 @@
             <div x-show="!showLogin" 
                  x-transition:enter="fade-enter-active"
                  x-transition:enter-start="fade-enter-from"
-                 x-transition:enter-end="fade-enter-to"
+                 x-transition:enter-end="opacity-100"
                  x-transition:leave="fade-leave-active"
-                 x-transition:leave-start="fade-leave-from"
+                 x-transition:leave-start="opacity-100"
                  x-transition:leave-end="fade-leave-to"
-                 class="form-wrapper">
+                 class="auth-form">
                 
                 <div class="mb-6">
                     <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Unlock sustainable manufacturing suite</h2>
                     <p class="text-slate-500 text-sm mt-1">Join the future of intelligent production</p>
                 </div>
                 
-                <form @submit.prevent="handleRegister" class="space-y-1">
+                <form @submit.prevent="handleRegister" class="space-y-5">
                     <!-- Row: First Name + Last Name -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="form-group">
-                            <label class="input-label">First name <span class="text-red-500">*</span></label>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">First name <span class="text-red-500">*</span></label>
                             <input type="text" x-model="registerData.firstName" class="spacer-input" placeholder="John">
-                            <div class="error-message">
+                            <div class="error-text">
                                 <span x-show="errors.firstName" x-text="errors.firstName"></span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="input-label">Last name <span class="text-red-500">*</span></label>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Last name <span class="text-red-500">*</span></label>
                             <input type="text" x-model="registerData.lastName" class="spacer-input" placeholder="Doe">
-                            <div class="error-message">
+                            <div class="error-text">
                                 <span x-show="errors.lastName" x-text="errors.lastName"></span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Employee ID -->
-                    <div class="form-group">
-                        <label class="input-label">Employee ID <span class="text-red-500">*</span></label>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Employee ID <span class="text-red-500">*</span></label>
                         <input type="text" x-model="registerData.employeeId" placeholder="e.g., EC-2034-5678" class="spacer-input">
-                        <div class="error-message">
+                        <div class="error-text">
                             <span x-show="errors.employeeId" x-text="errors.employeeId"></span>
                         </div>
                     </div>
                     
                     <!-- Work Email -->
-                    <div class="form-group">
-                        <label class="input-label">Work Email <span class="text-red-500">*</span></label>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Work Email <span class="text-red-500">*</span></label>
                         <input type="email" x-model="registerData.email" placeholder="name@ecospring.com" class="spacer-input">
-                        <div class="error-message">
+                        <div class="error-text">
                             <span x-show="errors.email" x-text="errors.email"></span>
                         </div>
                     </div>
                     
                     <!-- Phone Number -->
-                    <div class="form-group">
-                        <label class="input-label">Phone number <span class="text-red-500">*</span></label>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Phone number <span class="text-red-500">*</span></label>
                         <input type="tel" x-model="registerData.phone" placeholder="+1 (555) 000-9999" class="spacer-input">
-                        <div class="error-message">
+                        <div class="error-text">
                             <span x-show="errors.phone" x-text="errors.phone"></span>
                         </div>
                     </div>
                     
                     <!-- Gender Dropdown -->
-                    <div class="form-group">
-                        <label class="input-label">Gender</label>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Gender</label>
                         <select x-model="registerData.gender" class="custom-select">
                             <option value="">Prefer not to say</option>
                             <option value="Male">Male</option>
@@ -380,13 +339,13 @@
                             <option value="Non-binary">Non-binary</option>
                             <option value="Other">Other</option>
                         </select>
-                        <div class="error-message"></div>
+                        <div class="error-text"></div>
                     </div>
                     
                     <!-- Password & Confirm Password row -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="form-group">
-                            <label class="input-label">Password <span class="text-red-500">*</span></label>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Password <span class="text-red-500">*</span></label>
                             <div class="relative">
                                 <input :type="regShowPassword ? 'text' : 'password'" x-model="registerData.password" class="spacer-input pr-8" placeholder="••••••••">
                                 <button type="button" @click="regShowPassword = !regShowPassword" class="password-toggle">
@@ -394,32 +353,32 @@
                                     <svg x-show="regShowPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
                                 </button>
                             </div>
-                            <div class="error-message">
+                            <div class="error-text">
                                 <span x-show="errors.password" x-text="errors.password"></span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="input-label">Confirm password <span class="text-red-500">*</span></label>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Confirm password <span class="text-red-500">*</span></label>
                             <input type="password" x-model="registerData.confirmPassword" class="spacer-input" placeholder="••••••••">
-                            <div class="error-message">
+                            <div class="error-text">
                                 <span x-show="errors.confirmPassword" x-text="errors.confirmPassword"></span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Terms Checkbox -->
-                    <div class="form-group">
-                        <div class="flex items-center gap-3">
+                    <div>
+                        <div class="flex items-center gap-3 mt-2">
                             <input type="checkbox" x-model="registerData.agreeTerms" class="custom-checkbox">
                             <label class="text-sm text-slate-600 cursor-pointer">I agree to <a href="#" class="text-blue-600 hover:underline">Terms & Privacy</a></label>
                         </div>
-                        <div class="error-message">
+                        <div class="error-text">
                             <span x-show="errors.agreeTerms" x-text="errors.agreeTerms"></span>
                         </div>
                     </div>
                     
                     <!-- Submit Button -->
-                    <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-md flex justify-center items-center gap-2 mt-2" :disabled="loading">
+                    <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-md flex justify-center items-center gap-2 mt-4" :disabled="loading">
                         <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         <span x-text="loading ? 'Creating account...' : 'Create account'"></span>
                     </button>
