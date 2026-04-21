@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div x-data="{ addModal: false }">
+    <div class="flex justify-between items-center mb-8">
+        <h3 class="text-xl font-extrabold text-[#020817]">Master Inventory</h3>
+        <button @click="addModal = true" class="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-sm font-bold py-3 px-6 rounded-xl shadow-lg shadow-sky-500/30 transition-all flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+            Add New Material
+        </button>
+    </div>
+
+    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50/80 border-b border-slate-100 text-slate-400 text-xs uppercase tracking-widest">
+                    <th class="p-6 font-bold pl-8">Material Name</th>
+                    <th class="p-6 font-bold">Quantity</th>
+                    <th class="p-6 font-bold">Unit</th>
+                    <th class="p-6 font-bold">Status</th>
+                    <th class="p-6 font-bold text-right pr-8">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-slate-50">
+                {% for item in materials %}
+                <tr class="hover:bg-sky-50/30 transition-colors group">
+                    <td class="p-6 pl-8 font-extrabold text-[#020817] text-base">{{ item.name }}</td>
+                    <td class="p-6 text-slate-600 font-bold">{{ item.quantity }}</td>
+                    <td class="p-6 text-slate-500 font-medium">{{ item.unit }}</td>
+                    <td class="p-6">
+                        {% if item.quantity <= item.reorder_level %}
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 border border-red-100">⚠ Low Stock</span>
+                        {% else %}
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">✓ Healthy</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-6 pr-8 text-right">
+                        <form action="/delete_material/{{ item._id }}" method="POST" class="inline">
+                            <button type="submit" onclick="return confirm('Delete {{ item.name }}?');" class="text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+                                <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div x-show="addModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div x-show="addModal" class="absolute inset-0 bg-[#020817]/60 backdrop-blur-sm" @click="addModal = false"></div>
+        <div x-show="addModal" class="relative w-full max-w-lg p-10 bg-white shadow-2xl rounded-[2rem]">
+            <h3 class="text-2xl font-extrabold text-[#020817] mb-8">Register New Material</h3>
+            <form method="POST" action="/add_material" class="space-y-5">
+                <input type="text" name="name" placeholder="Material Name (e.g., Labels, Caps)" required class="w-full px-5 py-3.5 border-2 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                <div class="flex gap-5">
+                    <input type="number" name="quantity" placeholder="Initial Quantity" required class="w-full px-5 py-3.5 border-2 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                    <input type="text" name="unit" placeholder="Unit of Measure" required class="w-full px-5 py-3.5 border-2 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                </div>
+                <input type="number" name="reorder_level" placeholder="Restock Alert Threshold" required class="w-full px-5 py-3.5 border-2 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                <div class="mt-10 flex justify-end gap-3">
+                    <button type="button" @click="addModal = false" class="px-6 py-3.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200">Cancel</button>
+                    <button type="submit" class="px-6 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-sky-500 to-cyan-500 rounded-xl shadow-lg shadow-sky-500/20 hover:from-sky-600 hover:to-cyan-600">Add to Inventory</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
