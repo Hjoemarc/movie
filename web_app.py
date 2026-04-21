@@ -87,11 +87,18 @@ def login():
 # AUTHENTICATION: Register
 @app.route('/register', methods=['POST'])
 def register():
+    # Gather basic details
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     username = request.form.get('username')
     password = request.form.get('password')
     role = request.form.get('role')
+    
+    # Gather new detailed fields
+    employee_id = request.form.get('employee_id')
+    gender = request.form.get('gender')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
     
     if users.find_one({"username": username}):
         flash("Username already exists! Please choose another.", "error")
@@ -99,17 +106,17 @@ def register():
         users.insert_one({
             "first_name": first_name,
             "last_name": last_name,
+            "employee_id": employee_id,
+            "gender": gender,
+            "email": email,
+            "phone": phone,
             "username": username, 
             "password": password, 
-            "role": role
+            "role": role,
+            "date_created": datetime.now()
         })
         flash("Account created successfully! You can now log in.", "success")
         
-    return redirect(url_for('index'))
-
-@app.route('/logout')
-def logout():
-    session.clear()
     return redirect(url_for('index'))
 
 # CREATE: Add Material
