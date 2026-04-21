@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+    
+    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Raw Materials</h3>
+            <div class="p-3 bg-sky-50 text-sky-600 rounded-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            </div>
+        </div>
+        <div>
+            <p class="text-4xl font-extrabold text-[#020817]">{{ data.total_raw }}</p>
+            <p class="text-sm text-sky-600 mt-2 font-semibold">Active Inventory</p>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Finished Products</h3>
+            <div class="p-3 bg-cyan-50 text-cyan-600 rounded-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+            </div>
+        </div>
+        <div>
+            <p class="text-4xl font-extrabold text-[#020817]">{{ data.total_finished }}</p>
+            <p class="text-sm text-cyan-600 mt-2 font-semibold">Bottles in Stock</p>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full z-0"></div>
+        <div class="flex justify-between items-start mb-6 relative z-10">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Stock Alerts</h3>
+            <div class="p-3 bg-red-100 text-red-600 rounded-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+        </div>
+        <div class="relative z-10">
+            <p class="text-4xl font-extrabold text-[#020817]">{{ data.low_stock }}</p>
+            <p class="text-sm text-red-500 mt-2 font-semibold">Items Require Restock</p>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-sky-500 to-cyan-600 rounded-[1.5rem] shadow-lg shadow-sky-500/20 p-7 flex flex-col justify-between relative overflow-hidden text-white card-hover">
+        <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+        <div class="flex justify-between items-start mb-6 relative z-10">
+            <h3 class="text-xs font-bold text-sky-100 uppercase tracking-widest">Daily Output</h3>
+            <div class="p-3 bg-white/20 text-white rounded-xl backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+        </div>
+        <div class="relative z-10">
+            <p class="text-4xl font-extrabold">{{ data.today_prod }}</p>
+            <p class="text-sm text-sky-100 mt-2 font-semibold">Bottles Manufactured Today</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
