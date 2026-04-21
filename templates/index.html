@@ -1,55 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
     <meta charset="UTF-8">
-    <title>Movie Database</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottled Water Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { height: 100vh; background-color: #212529; padding-top: 20px;}
+        .sidebar a { color: #adb5bd; text-decoration: none; display: block; padding: 12px 20px; font-weight: 500;}
+        .sidebar a:hover, .sidebar a.active { color: #fff; background-color: #343a40; border-left: 4px solid #0d6efd;}
+    </style>
 </head>
 <body>
 
-    <h1>Movie Database using MongoDB</h1>
-
-    <div>
-        <h3>Add a New Movie</h3>
-        <form action="/add" method="POST">
-            <input type="text" name="title" placeholder="Movie Title" required>
-            <input type="number" name="year" placeholder="Release Year" required>
-            <input type="text" name="genres" placeholder="Genres (comma separated)" required>
-            <button type="submit">Add Movie</button>
-        </form>
-    </div>
-
-    <br>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Year</th>
-                <th>Genres</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for movie in movies %}
-            <tr>
-                <td>{{ movie.title }}</td>
-                <td>{{ movie.year }}</td>
-                <td>
-                    {% if movie.genres %}
-                        {{ movie.genres | join(', ') if movie.genres is iterable and movie.genres is not string else movie.genres }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>
-                    <form action="/delete/{{ movie._id }}" method="POST">
-                        <button type="submit" onclick="return confirm('Delete {{ movie.title }}?');">Delete</button>
+{% if view == 'login' %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">System Login</h4>
+                </div>
+                <div class="card-body p-4">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <form method="POST" action="/login">
+                        <div class="mb-3">
+                            <label>Username</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="mb-4">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
                     </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+{% else %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar d-none d-md-block position-fixed">
+            <h5 class="text-white text-center mb-4 pb-2 border-bottom border-secondary">AquaFlow System</h5>
+            <a href="/?view=dashboard" class="{% if view == 'dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="/?view=inventory" class="{% if view == 'inventory' %}active{% endif %}">Raw Materials</a>
+            <a href="/?view=production" class="{% if view == 'production' %}active{% endif %}">Production</a>
+            <a href="#" class="text-muted">Suppliers (WIP)</a>
+            <a href="#" class="text-muted">Reports (WIP)</a>
+            <div class="mt-5 border-top border-secondary pt-3">
+                <a href="/logout" class="text-danger">Logout</a>
+            </div>
+        </div>
+        
+        <div class="col-md-10 offset-md-2 p-0">
+            <nav class="navbar navbar-light bg-white border-bottom px-4 py-3 shadow-sm mb-4">
+                <span class="navbar-brand mb-0 h1 text-capitalize">{{ view }}</span>
+                <span class="text-muted">Logged in as: <strong>{{ session.get('username') }}</strong> ({{ session.get('role') }})</span>
+            </nav>
+            
+            <div class="px-4">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                {% if view == 'dashboard' %}
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-primary shadow-sm border-0">
+                            <div class="card-body">
+                                <h6>Total Raw Materials</h6>
+                                <h2>{{ data.total_raw }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-success shadow-sm border-0">
+                            <div class="card-body">
+                                <h6>Finished Products</h6>
+                                <h2>{{ data.total_finished }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-danger shadow-sm border-0">
+                            <div class="card-body">
+                                <h6>Low Stock Alerts</h6>
+                                <h2>{{ data.low_stock }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-info shadow-sm border-0">
+                            <div class="card-body">
+                                <h6>Today's Production</h6>
+                                <h2>{{ data.today_prod }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif view == 'inventory' %}
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Materials Inventory</h5>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">Add Material</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Status</th>
+                                    <th>Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in data.materials %}
+                                <tr>
+                                    <td><strong>{{ item.name }}</strong></td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.unit }}</td>
+                                    <td>
+                                        {% if item.quantity <= item.reorder_level %}
+                                            <span class="badge bg-danger">Low Stock (Limit: {{ item.reorder_level }})</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Healthy</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.date_added }}</td>
+                                    <td>
+                                        <form action="/delete_material/{{ item._id }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete {{ item.name }}?');">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="addModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" action="/add_material">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">New Raw Material</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" name="name" class="form-control mb-3" placeholder="Material Name (e.g., Labels, Caps, Bottles)" required>
+                                    <input type="number" name="quantity" class="form-control mb-3" placeholder="Starting Quantity" required>
+                                    <input type="text" name="unit" class="form-control mb-3" placeholder="Unit (e.g., pcs)" required>
+                                    <input type="number" name="reorder_level" class="form-control mb-3" placeholder="Reorder Level (Alert threshold)" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save to Database</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif view == 'production' %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header bg-white py-3"><h5 class="mb-0">Run Production</h5></div>
+                            <div class="card-body">
+                                <p class="text-muted small">Enter total bottles. System will deduct Labels, Caps, and Bottles from Inventory automatically.</p>
+                                <form method="POST" action="/produce">
+                                    <div class="mb-3">
+                                        <label class="form-label">Quantity to Produce</label>
+                                        <input type="number" name="quantity" class="form-control" required min="1">
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">Execute Production</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white py-3"><h5 class="mb-0">Recent Production History</h5></div>
+                            <div class="card-body">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Amount Produced</th>
+                                            <th>Operator</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in data.history %}
+                                        <tr>
+                                            <td>{{ record.date }}</td>
+                                            <td><span class="badge bg-primary">+{{ record.quantity_produced }} Bottles</span></td>
+                                            <td>{{ record.produced_by }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
