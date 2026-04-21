@@ -11,14 +11,14 @@
     <style>
         * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
         
-        /* Enhanced gradient background for brand side */
+        /* Premium gradient background for brand side */
         .spacer-bg {
-            background: radial-gradient(circle at 10% 30%, #0f2b6d, #1e3a8a, #1d4ed8);
+            background: radial-gradient(circle at 20% 30%, #0f2b6d, #1e3a8a, #1d4ed8);
             position: relative;
             overflow: hidden;
         }
         
-        /* Animated floating particles effect */
+        /* Subtle animated pattern */
         .spacer-bg::after {
             content: "";
             position: absolute;
@@ -26,42 +26,55 @@
             height: 200%;
             top: -50%;
             left: -50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
             background-size: 40px 40px;
-            animation: floatParticles 40s linear infinite;
+            animation: slowDrift 30s linear infinite;
             pointer-events: none;
         }
         
-        @keyframes floatParticles {
+        @keyframes slowDrift {
             0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-20%, -20%) rotate(4deg); }
+            100% { transform: translate(-10%, -10%) rotate(2deg); }
         }
 
-        /* Modern input styling */
+        /* Clean, modern input styling - no distortion */
         .spacer-input {
             border: none;
             border-bottom: 2px solid #e2e8f0;
             border-radius: 0;
-            padding: 0.75rem 0;
+            padding: 0.75rem 0 0.75rem 0;
             background: transparent;
-            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.2s ease;
             font-size: 0.95rem;
             width: 100%;
+            outline: none;
         }
         
         .spacer-input:focus {
             border-bottom-color: #3b82f6;
-            outline: none;
             box-shadow: 0 1px 0 0 #3b82f6;
         }
         
-        /* Floating label / enhanced field group */
-        .input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
+        /* Select dropdown styling - consistent and clean */
+        .custom-select {
+            border: none;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0;
+            background: transparent;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #1e293b;
+            width: 100%;
+            outline: none;
+            transition: all 0.2s ease;
         }
         
-        /* Password toggle */
+        .custom-select:focus {
+            border-bottom-color: #3b82f6;
+        }
+        
+        /* Password toggle button */
         .password-toggle {
             position: absolute;
             right: 0;
@@ -78,56 +91,7 @@
         
         .password-toggle:hover { color: #3b82f6; }
         
-        /* Custom select styling */
-        .custom-select {
-            border: none;
-            border-bottom: 2px solid #e2e8f0;
-            padding: 0.75rem 0;
-            background: transparent;
-            border-radius: 0;
-            cursor: pointer;
-            font-size: 0.95rem;
-            color: #1e293b;
-        }
-        
-        .custom-select:focus {
-            outline: none;
-            border-bottom-color: #3b82f6;
-        }
-        
-        /* Smooth transition container with proper crossfade */
-        .form-container {
-            position: relative;
-            width: 100%;
-            min-height: 520px;
-        }
-        
-        .form-panel {
-            transition: opacity 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            will-change: opacity, transform;
-        }
-        
-        .form-panel-enter {
-            opacity: 0;
-            transform: translateX(18px);
-        }
-        
-        .form-panel-enter-active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .form-panel-leave {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .form-panel-leave-active {
-            opacity: 0;
-            transform: translateX(-18px);
-        }
-        
-        /* Button hover effect */
+        /* Button with smooth hover */
         .btn-primary {
             transition: all 0.2s ease;
             transform: translateY(0);
@@ -138,6 +102,10 @@
             box-shadow: 0 12px 25px -8px rgba(59,130,246,0.4);
         }
         
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
         /* Custom checkbox */
         .custom-checkbox {
             accent-color: #2563eb;
@@ -146,7 +114,7 @@
             cursor: pointer;
         }
         
-        /* Smooth divider */
+        /* Cloud divider shape */
         .cloud-divider {
             position: absolute;
             right: 0;
@@ -155,25 +123,47 @@
             width: 110px;
             fill: #ffffff;
             z-index: 2;
-            opacity: 0.95;
         }
         
         [x-cloak] { display: none !important; }
         
-        /* toast animation */
-        .toast-slide {
-            animation: slideUpFade 0.3s ease forwards;
+        /* Smooth cross-fade transitions */
+        .fade-enter-active, .fade-leave-active {
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .fade-enter-from {
+            opacity: 0;
+            transform: translateX(16px);
+        }
+        .fade-leave-to {
+            opacity: 0;
+            transform: translateX(-16px);
         }
         
-        @keyframes slideUpFade {
+        /* Toast animation */
+        .toast-slide {
+            animation: slideUp 0.3s ease forwards;
+        }
+        
+        @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         /* Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Fix for any overflow or distortion */
+        .form-container {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        input, select, button {
+            font-family: inherit;
+        }
     </style>
 </head>
 <body class="antialiased h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 to-slate-200">
@@ -183,7 +173,7 @@
      x-init="init()"
      x-cloak>
     
-    <!-- LEFT BRAND PANEL -->
+    <!-- LEFT BRAND PANEL - untouched elegant -->
     <div class="hidden lg:flex w-[40%] spacer-bg relative flex-col items-center justify-center text-center p-8 text-white">
         <svg class="cloud-divider" viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M0 0 C 25 35, 70 45, 100 100 L 100 0 Z" fill="#ffffff" />
@@ -207,17 +197,17 @@
         </div>
     </div>
 
-    <!-- RIGHT FORM SECTION with improved transitions -->
-    <div class="w-full lg:w-[60%] flex flex-col justify-center px-6 sm:px-10 lg:px-14 bg-white overflow-y-auto py-8">
+    <!-- RIGHT FORM SECTION - FIXED: no distortion, clean spacing -->
+    <div class="w-full lg:w-[60%] flex flex-col justify-center px-6 sm:px-10 lg:px-14 bg-white overflow-y-auto py-6 form-container">
         
-        <!-- Login Form (with smoother transition using x-show and custom classes) -->
+        <!-- LOGIN FORM -->
         <div x-show="showLogin" 
-             x-transition:enter="transition ease-out duration-400"
-             x-transition:enter-start="opacity-0 translate-x-6"
-             x-transition:enter-end="opacity-100 translate-x-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 translate-x-0"
-             x-transition:leave-end="opacity-0 -translate-x-6"
+             x-transition:enter="fade-enter-active"
+             x-transition:enter-start="fade-enter-from"
+             x-transition:enter-end="opacity-100 transform translate-x-0"
+             x-transition:leave="fade-enter-active"
+             x-transition:leave-start="opacity-100 transform translate-x-0"
+             x-transition:leave-end="fade-enter-from"
              class="w-full">
             
             <div class="mb-8">
@@ -226,12 +216,12 @@
             </div>
             
             <form @submit.prevent="handleLogin" class="space-y-6">
-                <div class="input-group">
+                <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Username / Email</label>
                     <input type="text" x-model="loginData.username" placeholder="john.doe@ecospring.com" class="spacer-input">
                     <div x-show="errors.loginUsername" x-cloak class="text-red-500 text-xs mt-1 flex items-center gap-1"><span>⚠️</span> <span x-text="errors.loginUsername"></span></div>
                 </div>
-                <div class="input-group">
+                <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
                     <div class="relative">
                         <input :type="showPassword ? 'text' : 'password'" x-model="loginData.password" placeholder="••••••••" class="spacer-input pr-8">
@@ -254,39 +244,61 @@
             </form>
         </div>
 
-        <!-- REGISTRATION FORM with extended fields (Employee ID, Phone, Gender, etc) -->
+        <!-- REGISTRATION FORM - FULLY FIXED, no distortion, all fields aligned -->
         <div x-show="!showLogin" 
-             x-transition:enter="transition ease-out duration-400"
-             x-transition:enter-start="opacity-0 translate-x-6"
-             x-transition:enter-end="opacity-100 translate-x-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 translate-x-0"
-             x-transition:leave-end="opacity-0 -translate-x-6"
+             x-transition:enter="fade-enter-active"
+             x-transition:enter-start="fade-enter-from"
+             x-transition:enter-end="opacity-100 transform translate-x-0"
+             x-transition:leave="fade-enter-active"
+             x-transition:leave-start="opacity-100 transform translate-x-0"
+             x-transition:leave-end="fade-enter-from"
              class="w-full">
             
             <div class="mb-6">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Join the network</h2>
-                <p class="text-slate-500 text-sm">Unlock sustainable manufacturing suite</p>
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Unlock sustainable manufacturing suite</h2>
+                <p class="text-slate-500 text-sm mt-1">Join the future of intelligent production</p>
             </div>
             
             <form @submit.prevent="handleRegister" class="space-y-5">
+                <!-- Row: First Name + Last Name -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">First name *</label><input type="text" x-model="registerData.firstName" class="spacer-input"><div x-show="errors.firstName" class="text-red-500 text-xs mt-1" x-text="errors.firstName"></div></div>
-                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">Last name *</label><input type="text" x-model="registerData.lastName" class="spacer-input"><div x-show="errors.lastName" class="text-red-500 text-xs mt-1" x-text="errors.lastName"></div></div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">First name <span class="text-red-500">*</span></label>
+                        <input type="text" x-model="registerData.firstName" class="spacer-input" placeholder="John">
+                        <div x-show="errors.firstName" class="text-red-500 text-xs mt-1" x-text="errors.firstName"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Last name <span class="text-red-500">*</span></label>
+                        <input type="text" x-model="registerData.lastName" class="spacer-input" placeholder="Doe">
+                        <div x-show="errors.lastName" class="text-red-500 text-xs mt-1" x-text="errors.lastName"></div>
+                    </div>
                 </div>
                 
-                <!-- Employee ID field -->
-                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Employee ID *</label><input type="text" x-model="registerData.employeeId" placeholder="e.g., EC-2034-5678" class="spacer-input"><div x-show="errors.employeeId" class="text-red-500 text-xs mt-1" x-text="errors.employeeId"></div></div>
+                <!-- Employee ID -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Employee ID <span class="text-red-500">*</span></label>
+                    <input type="text" x-model="registerData.employeeId" placeholder="e.g., EC-2034-5678" class="spacer-input">
+                    <div x-show="errors.employeeId" class="text-red-500 text-xs mt-1" x-text="errors.employeeId"></div>
+                </div>
                 
-                <!-- Email field -->
-                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Work Email *</label><input type="email" x-model="registerData.email" placeholder="name@ecospring.com" class="spacer-input"><div x-show="errors.email" class="text-red-500 text-xs mt-1" x-text="errors.email"></div></div>
+                <!-- Work Email -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Work Email <span class="text-red-500">*</span></label>
+                    <input type="email" x-model="registerData.email" placeholder="name@ecospring.com" class="spacer-input">
+                    <div x-show="errors.email" class="text-red-500 text-xs mt-1" x-text="errors.email"></div>
+                </div>
                 
-                <!-- Phone field -->
-                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Phone number *</label><input type="tel" x-model="registerData.phone" placeholder="+1 (555) 000-9999" class="spacer-input"><div x-show="errors.phone" class="text-red-500 text-xs mt-1" x-text="errors.phone"></div></div>
+                <!-- Phone Number -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Phone number <span class="text-red-500">*</span></label>
+                    <input type="tel" x-model="registerData.phone" placeholder="+1 (555) 000-9999" class="spacer-input">
+                    <div x-show="errors.phone" class="text-red-500 text-xs mt-1" x-text="errors.phone"></div>
+                </div>
                 
-                <!-- Gender dropdown -->
-                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Gender</label>
-                    <select x-model="registerData.gender" class="custom-select w-full">
+                <!-- Gender Dropdown -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Gender</label>
+                    <select x-model="registerData.gender" class="custom-select">
                         <option value="">Prefer not to say</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -295,27 +307,46 @@
                     </select>
                 </div>
                 
-                <!-- Password & Confirm -->
+                <!-- Password & Confirm Password row -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">Password *</label><input :type="regShowPassword ? 'text' : 'password'" x-model="registerData.password" class="spacer-input"><div x-show="errors.password" class="text-red-500 text-xs mt-1" x-text="errors.password"></div></div>
-                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">Confirm password *</label><input type="password" x-model="registerData.confirmPassword" class="spacer-input"><div x-show="errors.confirmPassword" class="text-red-500 text-xs mt-1" x-text="errors.confirmPassword"></div></div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Password <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <input :type="regShowPassword ? 'text' : 'password'" x-model="registerData.password" class="spacer-input pr-8" placeholder="••••••••">
+                            <button type="button" @click="regShowPassword = !regShowPassword" class="password-toggle">
+                                <svg x-show="!regShowPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <svg x-show="regShowPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+                            </button>
+                        </div>
+                        <div x-show="errors.password" class="text-red-500 text-xs mt-1" x-text="errors.password"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Confirm password <span class="text-red-500">*</span></label>
+                        <input type="password" x-model="registerData.confirmPassword" class="spacer-input" placeholder="••••••••">
+                        <div x-show="errors.confirmPassword" class="text-red-500 text-xs mt-1" x-text="errors.confirmPassword"></div>
+                    </div>
                 </div>
                 
-                <!-- Show/hide password toggle for reg -->
-                <div class="flex justify-end -mt-3"><button type="button" @click="regShowPassword = !regShowPassword" class="text-xs text-blue-500 flex items-center gap-1"><span x-text="regShowPassword ? 'Hide passwords' : 'Show passwords'"></span></button></div>
+                <!-- Terms Checkbox -->
+                <div class="flex items-center gap-3 mt-3">
+                    <input type="checkbox" x-model="registerData.agreeTerms" class="custom-checkbox">
+                    <label class="text-sm text-slate-600 cursor-pointer">I agree to <a href="#" class="text-blue-600 hover:underline">Terms & Privacy</a></label>
+                </div>
+                <div x-show="errors.agreeTerms" class="text-red-500 text-xs -mt-2" x-text="errors.agreeTerms"></div>
                 
-                <label class="flex items-center gap-3 cursor-pointer mt-2"><input type="checkbox" x-model="registerData.agreeTerms" class="custom-checkbox"><span class="text-sm text-slate-600">I agree to <a href="#" class="text-blue-600">Terms</a> & <a href="#" class="text-blue-600">Privacy</a></span></label>
-                <div x-show="errors.agreeTerms" class="text-red-500 text-xs" x-text="errors.agreeTerms"></div>
-                
-                <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-md flex justify-center items-center gap-2" :disabled="loading">
+                <!-- Submit Button -->
+                <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-md flex justify-center items-center gap-2 mt-6" :disabled="loading">
                     <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     <span x-text="loading ? 'Creating account...' : 'Create account'"></span>
                 </button>
-                <div class="text-center pt-2"><p class="text-sm text-slate-500">Already registered? <button type="button" @click="switchToLogin" class="text-blue-600 font-semibold hover:underline">Sign in</button></p></div>
+                
+                <div class="text-center pt-3">
+                    <p class="text-sm text-slate-500">Already registered? <button type="button" @click="switchToLogin" class="text-blue-600 font-semibold hover:underline">Sign in</button></p>
+                </div>
             </form>
         </div>
         
-        <!-- Toast message (non-intrusive) -->
+        <!-- Toast notification -->
         <div x-show="toastVisible" x-cloak class="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 toast-slide">
             <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             <span x-text="toastMsg"></span>
@@ -340,7 +371,7 @@
             },
             errors: {
                 loginUsername: '', loginPassword: '',
-                firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '',
+                firstName: '', lastName: '', employeeId: '', email: '', phone: '',
                 password: '', confirmPassword: '', agreeTerms: ''
             },
             
@@ -358,7 +389,7 @@
                 this.clearErrors();
             },
             clearErrors() {
-                this.errors = { loginUsername: '', loginPassword: '', firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '', password: '', confirmPassword: '', agreeTerms: '' };
+                this.errors = { loginUsername: '', loginPassword: '', firstName: '', lastName: '', employeeId: '', email: '', phone: '', password: '', confirmPassword: '', agreeTerms: '' };
             },
             showToastMessage(msg) {
                 this.toastMsg = msg;
@@ -370,7 +401,6 @@
                 let ok = true;
                 this.errors.loginUsername = this.errors.loginPassword = '';
                 if (!this.loginData.username.trim()) { this.errors.loginUsername = 'Username required'; ok = false; }
-                else if (this.loginData.username.length < 2) { this.errors.loginUsername = 'Invalid username'; ok = false; }
                 if (!this.loginData.password) { this.errors.loginPassword = 'Password required'; ok = false; }
                 else if (this.loginData.password.length < 4) { this.errors.loginPassword = 'Minimum 4 characters'; ok = false; }
                 return ok;
@@ -378,28 +408,27 @@
             
             validateRegister() {
                 let valid = true;
-                this.errors = { firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '', password: '', confirmPassword: '', agreeTerms: '' };
+                this.errors = { firstName: '', lastName: '', employeeId: '', email: '', phone: '', password: '', confirmPassword: '', agreeTerms: '' };
                 
                 if (!this.registerData.firstName.trim()) { this.errors.firstName = 'First name required'; valid = false; }
                 if (!this.registerData.lastName.trim()) { this.errors.lastName = 'Last name required'; valid = false; }
                 if (!this.registerData.employeeId.trim()) { this.errors.employeeId = 'Employee ID required'; valid = false; }
-                else if (this.registerData.employeeId.length < 3) { this.errors.employeeId = 'Valid Employee ID needed'; valid = false; }
                 
                 const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
                 if (!this.registerData.email) { this.errors.email = 'Email required'; valid = false; }
                 else if (!emailRegex.test(this.registerData.email)) { this.errors.email = 'Invalid email format'; valid = false; }
                 else if (!this.registerData.email.includes('ecospring')) { this.errors.email = 'Use @ecospring.com email address'; valid = false; }
                 
-                const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{3,5}[-\s\.]?[0-9]{4,6}$/im;
+                const phoneClean = this.registerData.phone.replace(/[\s\-+()]/g, '');
                 if (!this.registerData.phone.trim()) { this.errors.phone = 'Phone number required'; valid = false; }
-                else if (!phoneRegex.test(this.registerData.phone) && this.registerData.phone.replace(/[\s\-+()]/g, '').length < 8) { this.errors.phone = 'Enter a valid phone number'; valid = false; }
+                else if (phoneClean.length < 8 || isNaN(Number(phoneClean))) { this.errors.phone = 'Enter a valid phone number'; valid = false; }
                 
                 if (!this.registerData.password) { this.errors.password = 'Password required'; valid = false; }
                 else if (this.registerData.password.length < 6) { this.errors.password = 'Password must be at least 6 characters'; valid = false; }
-                else if (!/[A-Z]/.test(this.registerData.password)) { this.errors.password = 'Password must contain at least 1 uppercase letter'; valid = false; }
+                else if (!/[A-Z]/.test(this.registerData.password)) { this.errors.password = 'Include at least 1 uppercase letter'; valid = false; }
                 
                 if (this.registerData.password !== this.registerData.confirmPassword) { this.errors.confirmPassword = 'Passwords do not match'; valid = false; }
-                if (!this.registerData.agreeTerms) { this.errors.agreeTerms = 'You must accept terms'; valid = false; }
+                if (!this.registerData.agreeTerms) { this.errors.agreeTerms = 'You must accept the terms'; valid = false; }
                 return valid;
             },
             
@@ -410,25 +439,21 @@
                 if (this.loginData.remember) localStorage.setItem('ecospring_username', this.loginData.username);
                 else localStorage.removeItem('ecospring_username');
                 this.loading = false;
-                this.showToastMessage(`Welcome back, ${this.loginData.username}! Redirecting to dashboard...`);
-                setTimeout(() => alert(`✅ Demo login success!\nWelcome ${this.loginData.username}\n(production would redirect to dashboard)`), 400);
+                this.showToastMessage(`Welcome back, ${this.loginData.username}!`);
+                setTimeout(() => alert(`✅ Demo login successful!\nWelcome ${this.loginData.username}\n(Production would redirect to dashboard)`), 300);
             },
             
             async handleRegister() {
                 if (!this.validateRegister()) return;
                 this.loading = true;
-                await new Promise(r => setTimeout(r, 1100));
-                
-                // simulate registration payload
-                const userInfo = `${this.registerData.firstName} ${this.registerData.lastName} (ID: ${this.registerData.employeeId})`;
+                await new Promise(r => setTimeout(r, 1000));
                 this.loading = false;
                 this.showToastMessage(`Welcome ${this.registerData.firstName}! Account created.`);
                 setTimeout(() => {
                     alert(`🎉 Registration successful!\n\nName: ${this.registerData.firstName} ${this.registerData.lastName}\nEmployee ID: ${this.registerData.employeeId}\nEmail: ${this.registerData.email}\nPhone: ${this.registerData.phone}\nGender: ${this.registerData.gender || 'Not specified'}\n\nPlease verify your email to continue.`);
                     this.switchToLogin();
-                    // reset registration fields
                     this.registerData = { firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '', password: '', confirmPassword: '', agreeTerms: false };
-                }, 300);
+                }, 200);
             }
         }
     }
