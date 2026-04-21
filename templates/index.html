@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecospring | Production Management</title>
+    <title>Ecospring | Production Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f0f6f9; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f6f9; }
+        
+        /* Premium custom scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+        ::-webkit-scrollbar-thumb { background: #bae6fd; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #7dd3fc; }
+        
+        /* Subtle UI animations */
+        .glass-effect { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.1), 0 8px 10px -6px rgba(2, 132, 199, 0.1); }
+        
+        /* Fix for Alpine JS to prevent flickering */
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="text-slate-800 antialiased h-screen overflow-hidden">
@@ -25,11 +33,14 @@
         {% if messages %}
             {% for category, message in messages %}
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
-                     x-transition.opacity.duration.300ms
-                     class="flex items-center p-4 rounded-xl shadow-lg text-sm text-white min-w-[300px] border
-                     {% if category == 'error' %} bg-red-500 border-red-600 {% else %} bg-cyan-500 border-cyan-600 {% endif %}">
-                    <span class="flex-1 font-medium tracking-wide">{{ message }}</span>
-                    <button @click="show = false" class="ml-4 text-white hover:text-gray-200 transition-colors">✕</button>
+                     x-transition.enter="transition ease-out duration-300" x-transition.enter-start="opacity-0 transform translate-x-8" x-transition.enter-end="opacity-100 transform translate-x-0" x-transition.leave="transition ease-in duration-200" x-transition.leave-start="opacity-100" x-transition.leave-end="opacity-0"
+                     class="flex items-center p-4 rounded-2xl shadow-xl text-sm text-white min-w-[320px] 
+                     {% if category == 'error' %} bg-rose-500 {% else %} bg-sky-500 {% endif %}">
+                    <div class="p-2 bg-white/20 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="flex-1 font-semibold tracking-wide">{{ message }}</span>
+                    <button @click="show = false" class="ml-4 text-white hover:text-white/70 transition-colors">✕</button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -39,133 +50,130 @@
 {% if view == 'login' %}
 <div class="flex h-screen w-full bg-white" x-data="{ showLogin: true }">
     
-    <div class="hidden lg:flex w-1/2 relative bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1548842416-8c4600216503?q=80&w=2070&auto=format&fit=crop');">
-        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/60 to-cyan-900/90"></div>
+    <div class="hidden lg:flex w-[45%] relative bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1548842416-8c4600216503?q=80&w=2070&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#020817]/90 via-[#0369a1]/80 to-[#0ea5e9]/70 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#020817] to-transparent opacity-80"></div>
         
-        <div class="relative z-10 flex flex-col justify-end p-16 w-full">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="p-2.5 bg-cyan-500 rounded-lg shadow-md">
-                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
-                </div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">Ecospring</h1>
+        <div class="relative z-10 flex flex-col justify-end p-16 w-full h-full">
+            <div class="w-16 h-16 bg-gradient-to-br from-sky-400 to-cyan-300 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-sky-500/30">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
             </div>
-            <h2 class="text-white text-4xl font-semibold leading-tight mb-4">Streamlined Bottled Water Production.</h2>
-            <p class="text-cyan-100 text-lg max-w-md font-light">
-                Securely manage your raw materials inventory, execute production batches, and monitor factory output in real-time.
+            <h1 class="text-white text-5xl font-extrabold leading-tight mb-6 tracking-tight">
+                Purity at <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-200">Scale.</span>
+            </h1>
+            <p class="text-sky-100/80 text-lg max-w-md font-medium leading-relaxed">
+                The enterprise platform for Ecospring. Manage raw materials, automate production tracking, and oversee logistics in one unified workspace.
             </p>
         </div>
     </div>
 
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-sky-50/30 overflow-y-auto">
-        <div class="w-full max-w-lg bg-white p-10 rounded-3xl shadow-xl border border-sky-100">
+    <div class="w-full lg:w-[55%] flex items-center justify-center p-8 bg-sky-50/40 relative overflow-y-auto">
+        <div class="w-full max-w-xl bg-white p-12 rounded-[2rem] shadow-[0_8px_30px_rgb(14,165,233,0.06)] border border-sky-100 min-h-[700px] flex flex-col justify-center relative">
             
-            <div class="grid items-start">
-                
-                <div x-show="showLogin" x-transition.opacity.duration.400ms class="col-start-1 row-start-1 w-full">
-                    <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-blue-950 mb-1">Welcome back</h2>
-                        <p class="text-slate-500 text-sm">Please enter your details to sign in.</p>
-                    </div>
-                    
-                    <form method="POST" action="/login" class="space-y-5">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
-                            <input type="text" name="username" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
-                            <input type="password" name="password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl shadow-md transition-colors duration-200 mt-2">
-                            Sign In
-                        </button>
-                    </form>
-                    
-                    <div class="mt-8 text-center border-t border-slate-100 pt-6">
-                        <p class="text-sm text-slate-500">
-                            Don't have an account? 
-                            <button @click="showLogin = false" class="text-cyan-600 hover:text-cyan-700 font-semibold transition-colors">Create one here</button>
-                        </p>
-                    </div>
+            <div x-show="showLogin" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="w-full absolute inset-0 p-12 flex flex-col justify-center">
+                <div class="mb-10 text-center">
+                    <h2 class="text-3xl font-extrabold text-[#020817] mb-2">Welcome Back</h2>
+                    <p class="text-slate-500 font-medium">Enter your credentials to access the portal.</p>
                 </div>
-
-                <div x-show="!showLogin" x-transition.opacity.duration.400ms class="col-start-1 row-start-1 w-full" style="display: none;">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-blue-950 mb-1">Create Account</h2>
-                        <p class="text-slate-500 text-sm">Join the Ecospring operations team.</p>
+                
+                <form method="POST" action="/login" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Username</label>
+                        <input type="text" name="username" required class="w-full px-5 py-3.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none transition-all text-slate-800 font-semibold bg-slate-50/50">
                     </div>
-                    
-                    <form method="POST" action="/register" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">First Name</label>
-                                <input type="text" name="first_name" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Last Name</label>
-                                <input type="text" name="last_name" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                        </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
+                        <input type="password" name="password" required class="w-full px-5 py-3.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none transition-all text-slate-800 font-semibold bg-slate-50/50">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] hover:from-[#0369a1] hover:to-[#0284c7] text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-sky-500/30 transition-all duration-300 mt-4">
+                        Sign In to Dashboard
+                    </button>
+                </form>
+                
+                <div class="mt-10 text-center">
+                    <p class="text-sm font-semibold text-slate-500">
+                        New team member? 
+                        <button @click="showLogin = false" type="button" class="text-sky-600 hover:text-sky-800 transition-colors ml-1">Create an account</button>
+                    </p>
+                </div>
+            </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
-                                <input type="text" name="employee_id" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Gender</label>
-                                <select name="gender" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50 text-slate-700">
-                                    <option value="" disabled selected>Select...</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
-                                <input type="email" name="email" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Phone Number</label>
-                                <input type="text" name="phone" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
-                                <input type="text" name="username" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
-                                <input type="password" name="password" required class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50">
-                            </div>
-                        </div>
-
+            <div x-show="!showLogin" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="w-full absolute inset-0 p-12 flex flex-col justify-center" style="display: none;">
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-extrabold text-[#020817] mb-2">Create Account</h2>
+                    <p class="text-slate-500 font-medium">Register your employee details below.</p>
+                </div>
+                
+                <form method="POST" action="/register" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">System Role</label>
-                            <select name="role" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-sm bg-slate-50 text-slate-700">
-                                <option value="Inventory Staff">Inventory Staff</option>
-                                <option value="Production">Production</option>
-                                <option value="Warehouse">Warehouse</option>
-                                <option value="Admin">Admin</option>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">First Name</label>
+                            <input type="text" name="first_name" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Last Name</label>
+                            <input type="text" name="last_name" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Employee ID</label>
+                            <input type="text" name="employee_id" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50 text-sky-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Gender</label>
+                            <select name="gender" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50 text-slate-700">
+                                <option value="" disabled selected>Select...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
-
-                        <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-4 rounded-xl shadow-md transition-colors duration-200 mt-4">
-                            Register Account
-                        </button>
-                    </form>
-                    
-                    <div class="mt-4 text-center border-t border-slate-100 pt-4">
-                        <p class="text-sm text-slate-500">
-                            Already have an account? 
-                            <button @click="showLogin = true" class="text-blue-900 hover:text-blue-700 font-semibold transition-colors">Sign in</button>
-                        </p>
                     </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Email Address</label>
+                            <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Phone</label>
+                            <input type="text" name="phone" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Username</label>
+                            <input type="text" name="username" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Password</label>
+                            <input type="password" name="password" required class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">System Role</label>
+                        <select name="role" required class="w-full px-4 py-3 rounded-xl border-2 border-slate-100 focus:border-sky-500 outline-none transition-all text-sm font-semibold bg-slate-50/50 text-sky-700">
+                            <option value="Inventory Staff">Inventory Staff</option>
+                            <option value="Production">Production</option>
+                            <option value="Warehouse">Warehouse</option>
+                            <option value="Admin">Administrator</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#020817] hover:bg-slate-800 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-colors duration-200 mt-2">
+                        Submit Registration
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-sm font-semibold text-slate-500">
+                        Already have an account? 
+                        <button @click="showLogin = true" type="button" class="text-sky-600 hover:text-sky-800 transition-colors ml-1">Sign in</button>
+                    </p>
                 </div>
             </div>
 
@@ -174,151 +182,157 @@
 </div>
 
 {% else %}
-<div class="flex h-screen bg-sky-50/50">
+<div class="flex h-screen bg-[#f0f6f9]">
     
-    <aside class="w-64 bg-[#0a192f] text-slate-400 flex flex-col shadow-xl z-20">
-        <div class="h-20 flex items-center px-6 border-b border-slate-700/50">
-            <div class="p-1.5 bg-cyan-500 rounded-lg mr-3 shadow-md shadow-cyan-500/20">
+    <aside class="w-72 bg-[#020817] text-slate-400 flex flex-col shadow-2xl z-20 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-sky-900/40 to-transparent pointer-events-none"></div>
+
+        <div class="h-24 flex items-center px-8 border-b border-slate-800/80 relative z-10">
+            <div class="w-10 h-10 bg-gradient-to-br from-sky-400 to-cyan-400 rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-sky-500/20">
                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
             </div>
             <div>
-                <h1 class="text-white font-bold text-lg tracking-tight">Ecospring</h1>
-                <span class="text-[10px] uppercase tracking-widest text-cyan-400 block font-medium">Manufacturing</span>
+                <h1 class="text-white font-extrabold text-xl tracking-tight">Ecospring</h1>
+                <span class="text-[10px] uppercase tracking-[0.15em] text-sky-400 block font-bold">Platform</span>
             </div>
         </div>
         
-        <div class="px-6 py-5">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Main Menu</p>
+        <div class="px-8 py-6 relative z-10">
+            <p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-2">Main Navigation</p>
         </div>
 
-        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto">
-            <a href="/?view=dashboard" class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 {% if view == 'dashboard' %}bg-blue-600 text-white shadow-md shadow-blue-900/20 font-medium{% else %}hover:bg-slate-800/50 hover:text-slate-200{% endif %}">
-                <svg class="w-5 h-5 mr-3 {% if view == 'dashboard' %}text-white{% else %}text-slate-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+        <nav class="flex-1 px-4 space-y-2 overflow-y-auto relative z-10">
+            <a href="/?view=dashboard" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'dashboard' %}bg-sky-500/15 text-sky-400 font-bold{% else %}hover:bg-slate-800/50 hover:text-white font-medium{% endif %}">
+                <svg class="w-5 h-5 mr-4 {% if view == 'dashboard' %}text-sky-400{% else %}text-slate-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                 Dashboard
             </a>
-            <a href="/?view=inventory" class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 {% if view == 'inventory' %}bg-blue-600 text-white shadow-md shadow-blue-900/20 font-medium{% else %}hover:bg-slate-800/50 hover:text-slate-200{% endif %}">
-                <svg class="w-5 h-5 mr-3 {% if view == 'inventory' %}text-white{% else %}text-slate-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                Raw Materials
+            <a href="/?view=inventory" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'inventory' %}bg-sky-500/15 text-sky-400 font-bold{% else %}hover:bg-slate-800/50 hover:text-white font-medium{% endif %}">
+                <svg class="w-5 h-5 mr-4 {% if view == 'inventory' %}text-sky-400{% else %}text-slate-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                Inventory
             </a>
-            <a href="/?view=production" class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 {% if view == 'production' %}bg-blue-600 text-white shadow-md shadow-blue-900/20 font-medium{% else %}hover:bg-slate-800/50 hover:text-slate-200{% endif %}">
-                <svg class="w-5 h-5 mr-3 {% if view == 'production' %}text-white{% else %}text-slate-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <a href="/?view=production" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'production' %}bg-sky-500/15 text-sky-400 font-bold{% else %}hover:bg-slate-800/50 hover:text-white font-medium{% endif %}">
+                <svg class="w-5 h-5 mr-4 {% if view == 'production' %}text-sky-400{% else %}text-slate-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 Production
             </a>
             
-            <div class="pt-6 mt-6 border-t border-slate-700/50">
-                <span class="px-4 text-xs font-semibold text-slate-600 uppercase tracking-wider">Coming Soon</span>
-                <a href="#" class="flex items-center px-4 py-3 mt-2 text-slate-600 cursor-not-allowed">Suppliers</a>
-                <a href="#" class="flex items-center px-4 py-3 text-slate-600 cursor-not-allowed">Reports</a>
+            <div class="pt-8 mt-8 border-t border-slate-800/80">
+                <span class="px-4 text-xs font-bold text-slate-700 uppercase tracking-widest">Coming Soon</span>
+                <a href="#" class="flex items-center px-4 py-3 mt-2 text-slate-600 font-medium cursor-not-allowed">Suppliers</a>
+                <a href="#" class="flex items-center px-4 py-3 text-slate-600 font-medium cursor-not-allowed">Reports</a>
             </div>
         </nav>
         
-        <div class="p-4 border-t border-slate-700/50">
-            <a href="/logout" class="flex items-center justify-center w-full px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white bg-slate-800/40 rounded-xl hover:bg-slate-700 transition-colors border border-slate-700">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        <div class="p-6 border-t border-slate-800/80 relative z-10">
+            <a href="/logout" class="flex items-center justify-center w-full px-4 py-3 text-sm font-bold text-slate-400 hover:text-white bg-slate-800/30 rounded-xl hover:bg-slate-700 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 Sign Out
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden">
-        
-        <header class="h-20 bg-white border-b border-sky-100 flex items-center justify-between px-8 z-10 flex-shrink-0 shadow-sm">
-            <h2 class="text-2xl font-bold text-blue-950 capitalize tracking-tight">{{ view }}</h2>
-            <div class="flex items-center gap-4">
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-sky-200/40 blur-[100px] pointer-events-none z-0"></div>
+
+        <header class="h-24 glass-effect border-b border-slate-200/60 flex items-center justify-between px-10 z-10 flex-shrink-0">
+            <h2 class="text-3xl font-extrabold text-[#020817] capitalize tracking-tight">{{ view }}</h2>
+            
+            <div class="flex items-center gap-4 bg-white py-2 px-3 pl-5 rounded-full border border-slate-100 shadow-sm">
                 <div class="text-right">
-                    <p class="text-sm font-semibold text-blue-950">{{ session.get('full_name') }}</p>
-                    <p class="text-xs font-medium text-cyan-600">{{ session.get('role') }}</p>
+                    <p class="text-sm font-extrabold text-[#020817]">{{ session.get('full_name') }}</p>
+                    <p class="text-[10px] font-bold text-sky-600 uppercase tracking-widest">{{ session.get('role') }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-full bg-sky-100 text-blue-600 border border-sky-200 flex items-center justify-center font-bold text-lg shadow-sm">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 text-white flex items-center justify-center font-bold text-lg shadow-inner">
                     {{ session.get('full_name', 'U')[0] }}
                 </div>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-8">
+        <div class="flex-1 overflow-y-auto p-10 z-10">
             
             {% if view == 'dashboard' %}
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-2xl shadow-sm border border-sky-100 p-6 hover-lift flex flex-col justify-between border-t-4 border-t-blue-500">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider">Raw Materials</h3>
-                        <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>
+                <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Raw Materials</h3>
+                        <div class="p-3 bg-sky-50 text-sky-600 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>
                     </div>
                     <div>
-                        <p class="text-3xl font-bold text-blue-950">{{ data.total_raw }}</p>
-                        <p class="text-sm text-slate-400 mt-1 font-medium">Active Items</p>
+                        <p class="text-4xl font-extrabold text-[#020817]">{{ data.total_raw }}</p>
+                        <p class="text-sm text-sky-600 mt-2 font-semibold">Active Inventory</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-sky-100 p-6 hover-lift flex flex-col justify-between border-t-4 border-t-cyan-500">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider">Finished Products</h3>
-                        <div class="p-2.5 bg-cyan-50 text-cyan-600 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg></div>
+                <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Finished Products</h3>
+                        <div class="p-3 bg-cyan-50 text-cyan-600 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg></div>
                     </div>
                     <div>
-                        <p class="text-3xl font-bold text-blue-950">{{ data.total_finished }}</p>
-                        <p class="text-sm text-slate-400 mt-1 font-medium">Bottles in Stock</p>
+                        <p class="text-4xl font-extrabold text-[#020817]">{{ data.total_finished }}</p>
+                        <p class="text-sm text-cyan-600 mt-2 font-semibold">Bottles in Stock</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-sky-100 p-6 hover-lift flex flex-col justify-between border-t-4 border-t-red-400">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider">Stock Alerts</h3>
-                        <div class="p-2.5 bg-red-50 text-red-500 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+                <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full z-0"></div>
+                    <div class="flex justify-between items-start mb-6 relative z-10">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Stock Alerts</h3>
+                        <div class="p-3 bg-red-100 text-red-600 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
                     </div>
-                    <div>
-                        <p class="text-3xl font-bold text-blue-950">{{ data.low_stock }}</p>
-                        <p class="text-sm text-slate-400 mt-1 font-medium">Items Low on Stock</p>
+                    <div class="relative z-10">
+                        <p class="text-4xl font-extrabold text-[#020817]">{{ data.low_stock }}</p>
+                        <p class="text-sm text-red-500 mt-2 font-semibold">Items Require Restock</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-sky-100 p-6 hover-lift flex flex-col justify-between border-t-4 border-t-sky-500">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-sm font-medium text-slate-500 uppercase tracking-wider">Today's Production</h3>
-                        <div class="p-2.5 bg-sky-50 text-sky-600 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                <div class="bg-gradient-to-br from-sky-500 to-cyan-600 rounded-[1.5rem] shadow-lg shadow-sky-500/20 p-7 flex flex-col justify-between relative overflow-hidden text-white">
+                    <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                    <div class="flex justify-between items-start mb-6 relative z-10">
+                        <h3 class="text-xs font-bold text-sky-100 uppercase tracking-widest">Daily Output</h3>
+                        <div class="p-3 bg-white/20 text-white rounded-xl backdrop-blur-sm"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
                     </div>
-                    <div>
-                        <p class="text-3xl font-bold text-blue-950">{{ data.today_prod }}</p>
-                        <p class="text-sm text-slate-400 mt-1 font-medium">Bottles Produced</p>
+                    <div class="relative z-10">
+                        <p class="text-4xl font-extrabold">{{ data.today_prod }}</p>
+                        <p class="text-sm text-sky-100 mt-2 font-semibold">Bottles Manufactured Today</p>
                     </div>
                 </div>
             </div>
 
             {% elif view == 'inventory' %}
             <div x-data="{ addModal: false }">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-blue-950">Materials Overview</h3>
-                    <button @click="addModal = true" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2.5 px-4 rounded-xl shadow-md shadow-blue-600/20 transition-all flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        Add Material
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-xl font-extrabold text-[#020817]">Master Inventory</h3>
+                    <button @click="addModal = true" class="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-sm font-bold py-3 px-6 rounded-xl shadow-lg shadow-sky-500/30 transition-all flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        Add New Material
                     </button>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-sm border border-sky-100 overflow-hidden">
+                <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 overflow-hidden">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-sky-50/50 border-b border-sky-100 text-slate-500 text-xs uppercase tracking-wider">
-                                <th class="p-5 font-semibold pl-6">Material Name</th>
-                                <th class="p-5 font-semibold">Quantity</th>
-                                <th class="p-5 font-semibold">Unit</th>
-                                <th class="p-5 font-semibold">Status</th>
-                                <th class="p-5 font-semibold text-right pr-6">Actions</th>
+                            <tr class="bg-slate-50/80 border-b border-slate-100 text-slate-400 text-xs uppercase tracking-widest">
+                                <th class="p-6 font-bold pl-8">Material Name</th>
+                                <th class="p-6 font-bold">Quantity</th>
+                                <th class="p-6 font-bold">Unit</th>
+                                <th class="p-6 font-bold">Status</th>
+                                <th class="p-6 font-bold text-right pr-8">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="text-sm divide-y divide-sky-50">
+                        <tbody class="text-sm divide-y divide-slate-50">
                             {% for item in data.materials %}
-                            <tr class="hover:bg-sky-50/30 transition-colors">
-                                <td class="p-5 pl-6 font-semibold text-blue-950">{{ item.name }}</td>
-                                <td class="p-5 text-slate-600 font-medium">{{ item.quantity }}</td>
-                                <td class="p-5 text-slate-500">{{ item.unit }}</td>
-                                <td class="p-5">
+                            <tr class="hover:bg-sky-50/30 transition-colors group">
+                                <td class="p-6 pl-8 font-extrabold text-[#020817] text-base">{{ item.name }}</td>
+                                <td class="p-6 text-slate-600 font-bold">{{ item.quantity }}</td>
+                                <td class="p-6 text-slate-500 font-medium">{{ item.unit }}</td>
+                                <td class="p-6">
                                     {% if item.quantity <= item.reorder_level %}
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-red-50 text-red-600 border border-red-100">Low Stock</span>
+                                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-600 border border-red-100">⚠ Low Stock</span>
                                     {% else %}
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-cyan-50 text-cyan-600 border border-cyan-100">Healthy</span>
+                                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">✓ Healthy</span>
                                     {% endif %}
                                 </td>
-                                <td class="p-5 pr-6 text-right">
+                                <td class="p-6 pr-8 text-right">
                                     <form action="/delete_material/{{ item._id }}" method="POST" class="inline">
-                                        <button type="submit" onclick="return confirm('Delete {{ item.name }}?');" class="text-slate-400 hover:text-red-500 transition-colors">
-                                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <button type="submit" onclick="return confirm('Delete {{ item.name }}?');" class="text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100">
+                                            <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </form>
                                 </td>
@@ -328,37 +342,34 @@
                     </table>
                 </div>
 
-                <div x-show="addModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
-                    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-                        <div x-show="addModal" x-transition.opacity.duration.300ms class="fixed inset-0 transition-opacity bg-slate-900/40 backdrop-blur-sm" @click="addModal = false"></div>
-
-                        <div x-show="addModal" x-transition.duration.300ms class="relative inline-block w-full max-w-md p-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-3xl border border-sky-100">
-                            <h3 class="text-xl font-bold text-blue-950 mb-6">Add Raw Material</h3>
-                            <form method="POST" action="/add_material" class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Material Name</label>
-                                    <input type="text" name="name" placeholder="e.g., Labels, Caps" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none text-sm">
+                <div x-show="addModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+                    <div x-show="addModal" x-transition.opacity.duration.300ms class="absolute inset-0 bg-[#020817]/60 backdrop-blur-sm" @click="addModal = false"></div>
+                    <div x-show="addModal" x-transition.duration.300ms class="relative w-full max-w-lg p-10 bg-white shadow-2xl rounded-[2rem]">
+                        <h3 class="text-2xl font-extrabold text-[#020817] mb-8">Register New Material</h3>
+                        <form method="POST" action="/add_material" class="space-y-5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Material Name</label>
+                                <input type="text" name="name" placeholder="e.g., Labels, Caps" required class="w-full px-5 py-3.5 border-2 border-slate-100 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold text-slate-800 bg-slate-50/50">
+                            </div>
+                            <div class="flex gap-5">
+                                <div class="w-1/2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Initial Quantity</label>
+                                    <input type="number" name="quantity" placeholder="0" required class="w-full px-5 py-3.5 border-2 border-slate-100 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold text-slate-800 bg-slate-50/50">
                                 </div>
-                                <div class="flex gap-4">
-                                    <div class="w-1/2">
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Quantity</label>
-                                        <input type="number" name="quantity" placeholder="0" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none text-sm">
-                                    </div>
-                                    <div class="w-1/2">
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Unit</label>
-                                        <input type="text" name="unit" placeholder="pcs" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none text-sm">
-                                    </div>
+                                <div class="w-1/2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Unit of Measure</label>
+                                    <input type="text" name="unit" placeholder="pcs" required class="w-full px-5 py-3.5 border-2 border-slate-100 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold text-slate-800 bg-slate-50/50">
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Reorder Alert Level</label>
-                                    <input type="number" name="reorder_level" placeholder="100" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none text-sm">
-                                </div>
-                                <div class="mt-8 flex justify-end gap-3">
-                                    <button type="button" @click="addModal = false" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
-                                    <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-sm transition-colors">Save Material</button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Restock Alert Threshold</label>
+                                <input type="number" name="reorder_level" placeholder="100" required class="w-full px-5 py-3.5 border-2 border-slate-100 rounded-xl focus:border-sky-500 outline-none text-sm font-semibold text-slate-800 bg-slate-50/50">
+                            </div>
+                            <div class="mt-10 flex justify-end gap-3">
+                                <button type="button" @click="addModal = false" class="px-6 py-3.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
+                                <button type="submit" class="px-6 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-sky-500 to-cyan-500 rounded-xl shadow-lg shadow-sky-500/20 hover:from-sky-600 hover:to-cyan-600 transition-colors">Add to Inventory</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -366,53 +377,57 @@
             {% elif view == 'production' %}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="col-span-1">
-                    <div class="bg-white rounded-2xl shadow-sm border border-sky-100 p-6 sticky top-0">
-                        <div class="w-12 h-12 bg-cyan-50 text-cyan-600 rounded-xl flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-8 sticky top-0">
+                        <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-blue-950 mb-2">Execute Batch</h3>
-                        <p class="text-sm text-slate-500 mb-6 leading-relaxed">Enter total bottles. The system will automatically deduct corresponding labels, caps, and empty bottles from inventory.</p>
+                        <h3 class="text-xl font-extrabold text-[#020817] mb-2">Execute Production</h3>
+                        <p class="text-sm text-slate-500 mb-8 leading-relaxed font-medium">Initialize a new bottling batch. The system handles all inventory deductions automatically based on the target output.</p>
                         
-                        <form method="POST" action="/produce" class="space-y-4">
+                        <form method="POST" action="/produce" class="space-y-6">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Target Quantity</label>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Yield Target (Bottles)</label>
                                 <div class="relative">
-                                    <input type="number" name="quantity" required min="1" placeholder="100" class="w-full px-4 py-3 pl-12 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none font-semibold text-slate-800">
-                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                    <input type="number" name="quantity" required min="1" placeholder="100" class="w-full px-5 py-4 pl-14 border-2 border-slate-100 rounded-xl focus:border-sky-500 outline-none font-extrabold text-2xl text-slate-800 bg-slate-50/50 shadow-inner">
+                                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                                        <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl shadow-md shadow-blue-600/20 transition-colors duration-200 text-sm mt-2">
-                                Start Production Run
+                            <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-sky-500/30 transition-all duration-300 tracking-wide">
+                                START BATCH PROCESS
                             </button>
                         </form>
                     </div>
                 </div>
 
                 <div class="col-span-1 lg:col-span-2">
-                    <div class="bg-white rounded-2xl shadow-sm border border-sky-100 overflow-hidden">
-                        <div class="p-6 border-b border-sky-50 flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-blue-950">Production History</h3>
+                    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="p-8 border-b border-slate-50 flex items-center justify-between">
+                            <h3 class="text-xl font-extrabold text-[#020817]">Activity Logs</h3>
+                            <span class="px-3 py-1 bg-slate-100 text-slate-500 text-xs font-bold rounded-lg uppercase tracking-wider">Recent</span>
                         </div>
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-sky-50/50 text-slate-500 text-xs uppercase tracking-wider border-b border-sky-100">
-                                    <th class="p-5 pl-6 font-semibold">Timestamp</th>
-                                    <th class="p-5 font-semibold">Yield</th>
-                                    <th class="p-5 pr-6 font-semibold text-right">Operator</th>
+                                <tr class="bg-slate-50/50 text-slate-400 text-xs uppercase tracking-widest border-b border-slate-100">
+                                    <th class="p-6 pl-8 font-bold">Timestamp</th>
+                                    <th class="p-6 font-bold">Batch Yield</th>
+                                    <th class="p-6 pr-8 font-bold text-right">Authorized Operator</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-sm divide-y divide-sky-50">
+                            <tbody class="text-sm divide-y divide-slate-50">
                                 {% for record in data.history %}
                                 <tr class="hover:bg-sky-50/30 transition-colors">
-                                    <td class="p-5 pl-6 text-slate-500 font-medium">{{ record.date }}</td>
-                                    <td class="p-5">
-                                        <span class="inline-flex items-center text-sm font-bold text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-md border border-cyan-100">
-                                            +{{ record.quantity_produced }} Bottles
+                                    <td class="p-6 pl-8 text-slate-500 font-semibold">{{ record.date }}</td>
+                                    <td class="p-6">
+                                        <span class="inline-flex items-center text-sm font-extrabold text-sky-600 bg-sky-50 px-3 py-1.5 rounded-lg border border-sky-100">
+                                            +{{ record.quantity_produced }} Units
                                         </span>
                                     </td>
-                                    <td class="p-5 pr-6 text-right font-medium text-slate-700">{{ record.produced_by }}</td>
+                                    <td class="p-6 pr-8 text-right font-bold text-slate-800 flex justify-end items-center gap-3">
+                                        {{ record.produced_by }}
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">{{ record.produced_by[0] }}</div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
