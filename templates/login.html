@@ -3,132 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecospring | Welcome</title>
+    <title>Ecospring | Secure Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #030712; /* Ultra deep slate/black */
+            color: #e2e8f0;
+        }
         
-        /* Spacer Blue Gradient */
-        .spacer-bg {
-            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
-        }
-
-        /* Underline Input Style */
-        .spacer-input {
-            border: none;
-            border-bottom: 1.5px solid #e2e8f0;
-            border-radius: 0;
-            padding-left: 0;
-            transition: all 0.3s ease;
-        }
-        .spacer-input:focus {
-            border-bottom-color: #3b82f6;
-            box-shadow: none;
-            outline: none;
-        }
-
-        /* Cloud Divider Effect */
-        .cloud-divider {
-            position: absolute;
-            right: -1px;
-            top: 0;
-            height: 100%;
-            width: 120px;
-            fill: #ffffff;
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Form inputs autocomplete styling fix for dark mode */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
+            -webkit-text-fill-color: white !important;
         }
 
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="antialiased h-screen flex items-center justify-center p-4">
+<body class="antialiased h-screen overflow-hidden selection:bg-emerald-500/30">
 
-<div class="flex w-full max-w-6xl h-[700px] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden" x-data="{ showLogin: true }">
+<div class="fixed top-6 right-6 z-50 flex flex-col gap-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
+                     x-transition.enter="transition ease-out duration-300" x-transition.enter-start="opacity-0 translate-x-8" x-transition.enter-end="opacity-100 translate-x-0" x-transition.leave="transition ease-in duration-200" x-transition.leave-start="opacity-100" x-transition.leave-end="opacity-0"
+                     class="flex items-center p-4 rounded-2xl shadow-2xl text-sm min-w-[320px] border backdrop-blur-xl
+                     {% if category == 'error' %} bg-red-950/80 border-red-500/50 text-red-200 {% else %} bg-emerald-950/80 border-emerald-500/50 text-emerald-200 {% endif %}">
+                    <div class="p-2 bg-white/10 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="flex-1 font-medium tracking-wide">{{ message }}</span>
+                    <button @click="show = false" class="ml-4 hover:text-white transition-colors">✕</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="flex h-screen w-full relative" x-data="{ showLogin: true }">
     
-    <div class="hidden lg:flex w-[40%] spacer-bg relative flex-col items-center justify-center text-center p-12 text-white">
-        <svg class="cloud-divider" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0 0 C 50 20, 80 50, 100 100 L 100 0 Z" />
-        </svg>
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-600/20 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-teal-600/20 blur-[120px] pointer-events-none"></div>
 
-        <div class="relative z-10">
-            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 mx-auto shadow-lg">
-                <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/>
-                </svg>
+    <div class="hidden lg:flex w-[45%] relative bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#030712]/50 to-[#030712]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-[#030712]/80"></div>
+        
+        <div class="relative z-10 flex flex-col justify-center p-16 w-full h-full">
+            <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(16,185,129,0.3)] border border-white/20">
+                <svg class="w-8 h-8 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
             </div>
-            <h1 class="text-3xl font-bold mb-2 tracking-tight">Welcome to</h1>
-            <h2 class="text-4xl font-extrabold mb-8 tracking-tighter">Ecospring</h2>
-            <p class="text-blue-100 text-sm leading-relaxed opacity-90 max-w-xs">
-                Your centralized command center architected for speed, precision, and the future of manufacturing.
+            <h1 class="text-white text-6xl font-extrabold leading-tight mb-6 tracking-tight drop-shadow-lg">
+                Clarity in <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Motion.</span>
+            </h1>
+            <p class="text-slate-400 text-lg max-w-md font-light leading-relaxed">
+                The centralized command center for Ecospring. Architected for speed, built for precision, and designed for the future of manufacturing.
             </p>
         </div>
     </div>
 
-    <div class="w-full lg:w-[60%] flex flex-col justify-center px-12 lg:px-24 relative bg-white">
-        
-        <div x-show="showLogin" x-transition>
-            <h2 class="text-2xl font-bold text-slate-800 mb-8">Access Portal</h2>
+    <div class="w-full lg:w-[55%] flex items-center justify-center p-8 relative overflow-y-auto z-10">
+        <div class="w-full max-w-xl bg-white/[0.03] backdrop-blur-2xl p-12 rounded-[2rem] shadow-2xl border border-white/10 min-h-[780px] flex flex-col justify-center relative ring-1 ring-white/5">
             
-            <form action="/login" method="POST" class="space-y-8">
-                <div class="relative">
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Username</label>
-                    <input type="text" placeholder="Enter your username" class="w-full py-3 spacer-input text-slate-600 placeholder-slate-300">
+            <div x-show="showLogin" 
+                 x-transition:enter="transition ease-out duration-500 delay-150" 
+                 x-transition:enter-start="opacity-0 translate-y-4" 
+                 x-transition:enter-end="opacity-100 translate-y-0" 
+                 x-transition:leave="transition ease-in duration-300" 
+                 x-transition:leave-start="opacity-100 translate-y-0" 
+                 x-transition:leave-end="opacity-0 -translate-y-4" 
+                 class="w-full absolute inset-0 p-12 flex flex-col justify-center">
+                
+                <div class="mb-10 text-center">
+                    <h2 class="text-3xl font-extrabold text-white mb-2 tracking-tight">Access Portal</h2>
+                    <p class="text-slate-400 font-medium text-sm">Authenticate to enter the production network.</p>
                 </div>
-
-                <div class="relative">
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Password</label>
-                    <input type="password" placeholder="Enter your password" class="w-full py-3 spacer-input text-slate-600 placeholder-slate-300">
-                </div>
-
-                <div class="flex items-center gap-4 pt-4">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-full font-bold shadow-lg shadow-blue-200 transition-all">
-                        Sign In
-                    </button>
-                    <button @click="showLogin = false" type="button" class="border border-slate-200 text-slate-400 px-10 py-3 rounded-full font-bold hover:bg-slate-50 transition-all">
-                        Sign Up
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div x-show="!showLogin" x-transition x-cloak>
-            <h2 class="text-2xl font-bold text-slate-800 mb-6">Create your account</h2>
-            
-            <form action="/register" method="POST" class="space-y-6">
-                <div class="grid grid-cols-2 gap-6">
+                
+                <form method="POST" action="/login" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1">First Name</label>
-                        <input type="text" placeholder="John" class="w-full py-2 spacer-input text-slate-600">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">System Username</label>
+                        <input type="text" name="username" required class="w-full px-5 py-4 rounded-xl border border-slate-700/50 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-white font-medium bg-[#0f172a]/50 placeholder-slate-600 shadow-inner">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1">Last Name</label>
-                        <input type="text" placeholder="Doe" class="w-full py-2 spacer-input text-slate-600">
+                        <div class="flex justify-between items-center mb-2 ml-1 mr-1">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest">Security Passkey</label>
+                            <a href="#" class="text-xs font-semibold text-teal-400 hover:text-teal-300 transition-colors">Forgot?</a>
+                        </div>
+                        <input type="password" name="password" required class="w-full px-5 py-4 rounded-xl border border-slate-700/50 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-white font-medium bg-[#0f172a]/50 placeholder-slate-600 shadow-inner">
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Employee Email</label>
-                    <input type="email" placeholder="name@ecospring.com" class="w-full py-2 spacer-input text-slate-600">
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" class="w-4 h-4 text-blue-600 border-slate-300 rounded">
-                    <span class="text-xs text-slate-500">I agree to the <a href="#" class="text-blue-600 underline">Terms & Conditions</a></span>
-                </div>
-
-                <div class="flex items-center gap-4 pt-4">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-full font-bold shadow-lg shadow-blue-200 transition-all">
-                        Sign Up
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-900 font-extrabold py-4 px-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all duration-300 mt-6 tracking-wide">
+                        INITIALIZE SESSION
                     </button>
-                    <button @click="showLogin = true" type="button" class="text-slate-400 font-bold px-4 hover:text-slate-600">
-                        Back to Login
-                    </button>
+                </form>
+                
+                <div class="mt-12 text-center">
+                    <p class="text-sm font-medium text-slate-400">
+                        Require system access? 
+                        <button @click="showLogin = false" type="button" class="text-emerald-400 hover:text-emerald-300 font-bold transition-colors ml-1 border-b border-emerald-400/30 hover:border-emerald-300 pb-0.5">Register Node</button>
+                    </p>
                 </div>
-            </form>
+            </div>
+
+            <div x-show="!showLogin" 
+                 x-transition:enter="transition ease-out duration-500 delay-150" 
+                 x-transition:enter-start="opacity-0 translate-y-4" 
+                 x-transition:enter-end="opacity-100 translate-y-0" 
+                 x-transition:leave="transition ease-in duration-300" 
+                 x-transition:leave-start="opacity-100 translate-y-0" 
+                 x-transition:leave-end="opacity-0 -translate-y-4" 
+                 class="w-full absolute inset-0 p-12 flex flex-col justify-center" style="display: none;">
+                
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-extrabold text-white mb-2 tracking-tight">Register Node</h2>
+                    <p class="text-slate-400 font-medium text-sm">Provision your account in the Ecospring database.</p>
+                </div>
+                
+                <form method="POST" action="/register" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">First Name</label>
+                            <input type="text" name="first_name" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Last Name</label>
+                            <input type="text" name="last_name" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Employee ID</label>
+                            <input type="text" name="employee_id" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-emerald-300 font-bold text-sm bg-[#0f172a]/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Gender</label>
+                            <select name="gender" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-slate-200 text-sm bg-[#0f172a]/50 appearance-none">
+                                <option value="" disabled selected class="text-slate-500">Select...</option>
+                                <option value="Male" class="bg-slate-900 text-white">Male</option>
+                                <option value="Female" class="bg-slate-900 text-white">Female</option>
+                                <option value="Other" class="bg-slate-900 text-white">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Email</label>
+                            <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Phone</label>
+                            <input type="text" name="phone" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Username</label>
+                            <input type="text" name="username" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Password</label>
+                            <input type="password" name="password" required class="w-full px-4 py-3 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-white text-sm bg-[#0f172a]/50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Clearance Level</label>
+                        <select name="role" required class="w-full px-4 py-3.5 rounded-xl border border-slate-700/50 focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 outline-none transition-all text-emerald-300 font-bold text-sm bg-[#0f172a]/50 appearance-none">
+                            <option value="Inventory Staff" class="bg-slate-900 text-white">Inventory Staff</option>
+                            <option value="Production" class="bg-slate-900 text-white">Production</option>
+                            <option value="Warehouse" class="bg-slate-900 text-white">Warehouse</option>
+                            <option value="Admin" class="bg-slate-900 text-emerald-400">System Administrator</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-white hover:bg-slate-200 text-[#030712] font-extrabold py-4 px-4 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-colors duration-200 mt-4 tracking-wide">
+                        PROVISION ACCOUNT
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-sm font-medium text-slate-400">
+                        Node already registered? 
+                        <button @click="showLogin = true" type="button" class="text-teal-400 hover:text-teal-300 font-bold transition-colors ml-1 border-b border-teal-400/30 hover:border-teal-300 pb-0.5">Return to Login</button>
+                    </p>
+                </div>
+            </div>
+
         </div>
-
     </div>
 </div>
 
