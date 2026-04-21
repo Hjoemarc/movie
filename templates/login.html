@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecospring | Secure Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ecospring | Smart Manufacturing Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -12,64 +11,57 @@
     <style>
         * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
         
-        /* Smooth gradient background for spacer */
+        /* Enhanced gradient background for brand side */
         .spacer-bg {
-            background: linear-gradient(145deg, #0f2b6d 0%, #1e40af 50%, #2563eb 100%);
+            background: radial-gradient(circle at 10% 30%, #0f2b6d, #1e3a8a, #1d4ed8);
             position: relative;
             overflow: hidden;
         }
         
-        /* Animated dots pattern overlay */
-        .spacer-bg::before {
+        /* Animated floating particles effect */
+        .spacer-bg::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 24px 24px;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: floatParticles 40s linear infinite;
             pointer-events: none;
         }
+        
+        @keyframes floatParticles {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-20%, -20%) rotate(4deg); }
+        }
 
-        /* Modern underline input with better UX */
+        /* Modern input styling */
         .spacer-input {
             border: none;
             border-bottom: 2px solid #e2e8f0;
             border-radius: 0;
-            padding-left: 0;
-            padding-right: 0;
-            background-color: transparent;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 1rem;
+            padding: 0.75rem 0;
+            background: transparent;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            font-size: 0.95rem;
+            width: 100%;
         }
         
         .spacer-input:focus {
             border-bottom-color: #3b82f6;
             outline: none;
-            box-shadow: none;
+            box-shadow: 0 1px 0 0 #3b82f6;
         }
         
-        .spacer-input:hover:not(:focus) {
-            border-bottom-color: #cbd5e1;
-        }
-        
-        /* Error message styling */
-        .error-message {
-            font-size: 0.75rem;
-            margin-top: 0.375rem;
-            color: #dc2626;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        /* Input group for relative positioning */
+        /* Floating label / enhanced field group */
         .input-group {
             position: relative;
+            margin-bottom: 1.5rem;
         }
         
-        /* Password toggle button */
+        /* Password toggle */
         .password-toggle {
             position: absolute;
             right: 0;
@@ -81,14 +73,80 @@
             border: none;
             display: flex;
             align-items: center;
-            justify-content: center;
+            padding: 0;
         }
         
-        .password-toggle:hover {
-            color: #3b82f6;
+        .password-toggle:hover { color: #3b82f6; }
+        
+        /* Custom select styling */
+        .custom-select {
+            border: none;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0;
+            background: transparent;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #1e293b;
         }
         
-        /* Cloud divider with smooth curve */
+        .custom-select:focus {
+            outline: none;
+            border-bottom-color: #3b82f6;
+        }
+        
+        /* Smooth transition container with proper crossfade */
+        .form-container {
+            position: relative;
+            width: 100%;
+            min-height: 520px;
+        }
+        
+        .form-panel {
+            transition: opacity 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            will-change: opacity, transform;
+        }
+        
+        .form-panel-enter {
+            opacity: 0;
+            transform: translateX(18px);
+        }
+        
+        .form-panel-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .form-panel-leave {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .form-panel-leave-active {
+            opacity: 0;
+            transform: translateX(-18px);
+        }
+        
+        /* Button hover effect */
+        .btn-primary {
+            transition: all 0.2s ease;
+            transform: translateY(0);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -8px rgba(59,130,246,0.4);
+        }
+        
+        /* Custom checkbox */
+        .custom-checkbox {
+            accent-color: #2563eb;
+            width: 1rem;
+            height: 1rem;
+            cursor: pointer;
+        }
+        
+        /* Smooth divider */
         .cloud-divider {
             position: absolute;
             right: 0;
@@ -97,444 +155,279 @@
             width: 110px;
             fill: #ffffff;
             z-index: 2;
+            opacity: 0.95;
         }
         
         [x-cloak] { display: none !important; }
         
-        /* Smooth transitions for card */
-        .transition-fade {
-            transition: opacity 0.3s ease, transform 0.3s ease;
+        /* toast animation */
+        .toast-slide {
+            animation: slideUpFade 0.3s ease forwards;
         }
         
-        /* Button hover effects */
-        .btn-primary {
-            transition: all 0.2s ease;
-            transform: translateY(0);
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(59,130,246,0.3);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        
-        /* Custom checkbox styling */
-        .custom-checkbox {
-            accent-color: #2563eb;
-            width: 1rem;
-            height: 1rem;
-            cursor: pointer;
-        }
-        
-        /* Scrollbar hiding for clean look */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="antialiased h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 to-gray-100">
+<body class="antialiased h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 to-slate-200">
 
-<div class="flex w-full max-w-6xl h-[720px] bg-white rounded-3xl shadow-2xl overflow-hidden" 
-     x-data="authForm()" 
+<div class="flex w-full max-w-6xl h-[760px] bg-white rounded-3xl shadow-2xl overflow-hidden" 
+     x-data="authApp()" 
      x-init="init()"
      x-cloak>
     
-    <!-- Brand Sidebar - Hidden on mobile, elegant on desktop -->
-    <div class="hidden lg:flex w-[42%] spacer-bg relative flex-col items-center justify-center text-center p-10 text-white">
+    <!-- LEFT BRAND PANEL -->
+    <div class="hidden lg:flex w-[40%] spacer-bg relative flex-col items-center justify-center text-center p-8 text-white">
         <svg class="cloud-divider" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0 0 C 30 30, 70 40, 100 100 L 100 0 Z" fill="#ffffff" />
+            <path d="M0 0 C 25 35, 70 45, 100 100 L 100 0 Z" fill="#ffffff" />
         </svg>
-
-        <div class="relative z-10 animate-fade-in">
-            <div class="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8 mx-auto shadow-xl border border-white/30">
+        <div class="relative z-10 max-w-xs">
+            <div class="w-24 h-24 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center mb-7 mx-auto shadow-xl border border-white/30">
                 <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
             </div>
-            <h1 class="text-4xl font-bold mb-3 tracking-tight">Ecospring</h1>
-            <div class="h-1 w-16 bg-white/40 rounded-full mx-auto my-5"></div>
-            <p class="text-white/90 text-sm leading-relaxed max-w-xs font-light">
-                Intelligent manufacturing OS — precision, speed, and sustainability at your fingertips.
+            <h1 class="text-4xl font-bold tracking-tight">Ecospring</h1>
+            <div class="w-12 h-0.5 bg-white/50 mx-auto my-5 rounded-full"></div>
+            <p class="text-white/85 text-sm leading-relaxed font-light">
+                AI-driven manufacturing intelligence — real-time insights, zero waste, infinite potential.
             </p>
-            
-            <div class="mt-12 space-y-2 text-left max-w-xs mx-auto">
-                <div class="flex items-center gap-2 text-sm text-white/80">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>Real-time analytics</span>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-white/80">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>Supply chain automation</span>
-                </div>
-                <div class="flex items-center gap-2 text-sm text-white/80">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    <span>Carbon footprint tracking</span>
-                </div>
+            <div class="mt-10 space-y-3 text-left">
+                <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Predictive maintenance</span></div>
+                <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Carbon analytics</span></div>
+                <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Global supply chain OS</span></div>
             </div>
         </div>
     </div>
 
-    <!-- Dynamic Form Section -->
-    <div class="w-full lg:w-[58%] flex flex-col justify-center px-8 sm:px-12 lg:px-16 xl:px-20 bg-white overflow-y-auto">
+    <!-- RIGHT FORM SECTION with improved transitions -->
+    <div class="w-full lg:w-[60%] flex flex-col justify-center px-6 sm:px-10 lg:px-14 bg-white overflow-y-auto py-8">
         
-        <!-- Login Form -->
+        <!-- Login Form (with smoother transition using x-show and custom classes) -->
         <div x-show="showLogin" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-x-4"
-             x-transition:enter-end="opacity-100 transform translate-x-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform translate-x-0"
-             x-transition:leave-end="opacity-0 transform translate-x-4">
+             x-transition:enter="transition ease-out duration-400"
+             x-transition:enter-start="opacity-0 translate-x-6"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 translate-x-0"
+             x-transition:leave-end="opacity-0 -translate-x-6"
+             class="w-full">
             
             <div class="mb-8">
                 <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Welcome back</h2>
-                <p class="text-slate-500 mt-2 text-sm">Sign in to access your dashboard</p>
+                <p class="text-slate-500 text-sm mt-1">Sign in to access your command center</p>
             </div>
             
-            <form @submit.prevent="handleLogin" class="space-y-7">
-                <!-- Username Field -->
+            <form @submit.prevent="handleLogin" class="space-y-6">
                 <div class="input-group">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username or Email</label>
-                    <input type="text" 
-                           x-model="loginData.username"
-                           placeholder="john.doe@ecospring.com" 
-                           class="w-full py-3 spacer-input text-slate-700 placeholder:text-slate-300 focus:ring-0">
-                    <div x-show="errors.loginUsername" x-cloak class="error-message">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span x-text="errors.loginUsername"></span>
-                    </div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Username / Email</label>
+                    <input type="text" x-model="loginData.username" placeholder="john.doe@ecospring.com" class="spacer-input">
+                    <div x-show="errors.loginUsername" x-cloak class="text-red-500 text-xs mt-1 flex items-center gap-1"><span>⚠️</span> <span x-text="errors.loginUsername"></span></div>
                 </div>
-
-                <!-- Password Field with Toggle -->
                 <div class="input-group">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
                     <div class="relative">
-                        <input :type="showPassword ? 'text' : 'password'" 
-                               x-model="loginData.password"
-                               placeholder="••••••••" 
-                               class="w-full py-3 spacer-input text-slate-700 pr-10 focus:ring-0">
+                        <input :type="showPassword ? 'text' : 'password'" x-model="loginData.password" placeholder="••••••••" class="spacer-input pr-8">
                         <button type="button" @click="showPassword = !showPassword" class="password-toggle">
-                            <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                            </svg>
-                            <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
-                            </svg>
+                            <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
                         </button>
                     </div>
-                    <div x-show="errors.loginPassword" x-cloak class="error-message">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span x-text="errors.loginPassword"></span>
-                    </div>
+                    <div x-show="errors.loginPassword" x-cloak class="text-red-500 text-xs mt-1" x-text="errors.loginPassword"></div>
                 </div>
-
-                <div class="flex items-center justify-between pt-2">
-                    <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
-                        <input type="checkbox" x-model="loginData.remember" class="custom-checkbox">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium transition">Forgot password?</a>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer"><input type="checkbox" x-model="loginData.remember" class="custom-checkbox"> <span>Remember me</span></label>
+                    <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
                 </div>
-
-                <div class="pt-4">
-                    <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2" :disabled="loading">
-                        <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span x-text="loading ? 'Authenticating...' : 'Sign In'"></span>
-                    </button>
-                </div>
-                
-                <div class="text-center pt-4">
-                    <p class="text-sm text-slate-500">
-                        Don't have an account? 
-                        <button @click="switchToRegister" type="button" class="text-blue-600 font-semibold hover:underline ml-1">Create account</button>
-                    </p>
-                </div>
+                <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold shadow-md transition-all flex justify-center items-center gap-2" :disabled="loading">
+                    <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span x-text="loading ? 'Authenticating...' : 'Sign In'"></span>
+                </button>
+                <div class="text-center pt-3"><p class="text-sm text-slate-500">New to Ecospring? <button type="button" @click="switchToRegister" class="text-blue-600 font-semibold hover:underline">Create account</button></p></div>
             </form>
         </div>
 
-        <!-- Registration Form -->
+        <!-- REGISTRATION FORM with extended fields (Employee ID, Phone, Gender, etc) -->
         <div x-show="!showLogin" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-x-4"
-             x-transition:enter-end="opacity-100 transform translate-x-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform translate-x-0"
-             x-transition:leave-end="opacity-0 transform translate-x-4">
+             x-transition:enter="transition ease-out duration-400"
+             x-transition:enter-start="opacity-0 translate-x-6"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 translate-x-0"
+             x-transition:leave-end="opacity-0 -translate-x-6"
+             class="w-full">
             
-            <div class="mb-7">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Join Ecospring</h2>
-                <p class="text-slate-500 mt-2 text-sm">Start your sustainable manufacturing journey</p>
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight">Join the network</h2>
+                <p class="text-slate-500 text-sm">Unlock sustainable manufacturing suite</p>
             </div>
             
             <form @submit.prevent="handleRegister" class="space-y-5">
-                <div class="grid grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">First Name</label>
-                        <input type="text" x-model="registerData.firstName" placeholder="John" class="w-full py-3 spacer-input text-slate-700">
-                        <div x-show="errors.firstName" x-cloak class="error-message" x-text="errors.firstName"></div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Last Name</label>
-                        <input type="text" x-model="registerData.lastName" placeholder="Doe" class="w-full py-3 spacer-input text-slate-700">
-                        <div x-show="errors.lastName" x-cloak class="error-message" x-text="errors.lastName"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Employee Email</label>
-                    <input type="email" x-model="registerData.email" placeholder="name@ecospring.com" class="w-full py-3 spacer-input text-slate-700">
-                    <div x-show="errors.email" x-cloak class="error-message" x-text="errors.email"></div>
-                    <p class="text-xs text-slate-400 mt-1">Use your company email for verification</p>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
-                    <div class="relative">
-                        <input :type="regShowPassword ? 'text' : 'password'" 
-                               x-model="registerData.password"
-                               placeholder="Create a strong password" 
-                               class="w-full py-3 spacer-input text-slate-700 pr-10">
-                        <button type="button" @click="regShowPassword = !regShowPassword" class="password-toggle">
-                            <svg x-show="!regShowPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            <svg x-show="regShowPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
-                        </button>
-                    </div>
-                    <div x-show="errors.password" x-cloak class="error-message" x-text="errors.password"></div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Confirm Password</label>
-                    <input type="password" x-model="registerData.confirmPassword" placeholder="Confirm your password" class="w-full py-3 spacer-input text-slate-700">
-                    <div x-show="errors.confirmPassword" x-cloak class="error-message" x-text="errors.confirmPassword"></div>
-                </div>
-
-                <label class="flex items-center gap-3 cursor-pointer mt-3">
-                    <input type="checkbox" x-model="registerData.agreeTerms" class="custom-checkbox">
-                    <span class="text-sm text-slate-600">I agree to the <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a></span>
-                </label>
-                <div x-show="errors.agreeTerms" x-cloak class="error-message" x-text="errors.agreeTerms"></div>
-
-                <div class="pt-4">
-                    <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2" :disabled="loading">
-                        <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span x-text="loading ? 'Creating account...' : 'Create Account'"></span>
-                    </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">First name *</label><input type="text" x-model="registerData.firstName" class="spacer-input"><div x-show="errors.firstName" class="text-red-500 text-xs mt-1" x-text="errors.firstName"></div></div>
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">Last name *</label><input type="text" x-model="registerData.lastName" class="spacer-input"><div x-show="errors.lastName" class="text-red-500 text-xs mt-1" x-text="errors.lastName"></div></div>
                 </div>
                 
-                <div class="text-center pt-3">
-                    <p class="text-sm text-slate-500">
-                        Already have an account? 
-                        <button @click="switchToLogin" type="button" class="text-blue-600 font-semibold hover:underline ml-1">Sign in</button>
-                    </p>
+                <!-- Employee ID field -->
+                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Employee ID *</label><input type="text" x-model="registerData.employeeId" placeholder="e.g., EC-2034-5678" class="spacer-input"><div x-show="errors.employeeId" class="text-red-500 text-xs mt-1" x-text="errors.employeeId"></div></div>
+                
+                <!-- Email field -->
+                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Work Email *</label><input type="email" x-model="registerData.email" placeholder="name@ecospring.com" class="spacer-input"><div x-show="errors.email" class="text-red-500 text-xs mt-1" x-text="errors.email"></div></div>
+                
+                <!-- Phone field -->
+                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Phone number *</label><input type="tel" x-model="registerData.phone" placeholder="+1 (555) 000-9999" class="spacer-input"><div x-show="errors.phone" class="text-red-500 text-xs mt-1" x-text="errors.phone"></div></div>
+                
+                <!-- Gender dropdown -->
+                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Gender</label>
+                    <select x-model="registerData.gender" class="custom-select w-full">
+                        <option value="">Prefer not to say</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
+                
+                <!-- Password & Confirm -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">Password *</label><input :type="regShowPassword ? 'text' : 'password'" x-model="registerData.password" class="spacer-input"><div x-show="errors.password" class="text-red-500 text-xs mt-1" x-text="errors.password"></div></div>
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">Confirm password *</label><input type="password" x-model="registerData.confirmPassword" class="spacer-input"><div x-show="errors.confirmPassword" class="text-red-500 text-xs mt-1" x-text="errors.confirmPassword"></div></div>
+                </div>
+                
+                <!-- Show/hide password toggle for reg -->
+                <div class="flex justify-end -mt-3"><button type="button" @click="regShowPassword = !regShowPassword" class="text-xs text-blue-500 flex items-center gap-1"><span x-text="regShowPassword ? 'Hide passwords' : 'Show passwords'"></span></button></div>
+                
+                <label class="flex items-center gap-3 cursor-pointer mt-2"><input type="checkbox" x-model="registerData.agreeTerms" class="custom-checkbox"><span class="text-sm text-slate-600">I agree to <a href="#" class="text-blue-600">Terms</a> & <a href="#" class="text-blue-600">Privacy</a></span></label>
+                <div x-show="errors.agreeTerms" class="text-red-500 text-xs" x-text="errors.agreeTerms"></div>
+                
+                <button type="submit" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold shadow-md flex justify-center items-center gap-2" :disabled="loading">
+                    <svg x-show="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span x-text="loading ? 'Creating account...' : 'Create account'"></span>
+                </button>
+                <div class="text-center pt-2"><p class="text-sm text-slate-500">Already registered? <button type="button" @click="switchToLogin" class="text-blue-600 font-semibold hover:underline">Sign in</button></p></div>
             </form>
         </div>
         
-        <!-- Success Toast Notification (simulated feedback) -->
-        <div x-show="showToast" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-y-4"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform translate-y-4"
-             class="fixed bottom-6 right-6 bg-green-600 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50"
-             x-cloak>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            <span x-text="toastMessage"></span>
+        <!-- Toast message (non-intrusive) -->
+        <div x-show="toastVisible" x-cloak class="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 toast-slide">
+            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span x-text="toastMsg"></span>
         </div>
     </div>
 </div>
 
 <script>
-    function authForm() {
+    function authApp() {
         return {
             showLogin: true,
             showPassword: false,
             regShowPassword: false,
             loading: false,
-            showToast: false,
-            toastMessage: '',
+            toastVisible: false,
+            toastMsg: '',
             
-            loginData: {
-                username: '',
-                password: '',
-                remember: false
-            },
-            
+            loginData: { username: '', password: '', remember: false },
             registerData: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                agreeTerms: false
+                firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '',
+                password: '', confirmPassword: '', agreeTerms: false
             },
-            
             errors: {
-                loginUsername: '',
-                loginPassword: '',
-                firstName: '',
-                lastName: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                agreeTerms: ''
+                loginUsername: '', loginPassword: '',
+                firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '',
+                password: '', confirmPassword: '', agreeTerms: ''
             },
             
             init() {
-                // Optional: load saved username from localStorage
-                const savedUser = localStorage.getItem('ecospring_username');
-                if (savedUser) {
-                    this.loginData.username = savedUser;
-                    this.loginData.remember = true;
-                }
+                const saved = localStorage.getItem('ecospring_username');
+                if (saved) { this.loginData.username = saved; this.loginData.remember = true; }
             },
             
             switchToRegister() {
                 this.showLogin = false;
                 this.clearErrors();
             },
-            
             switchToLogin() {
                 this.showLogin = true;
                 this.clearErrors();
             },
-            
             clearErrors() {
-                this.errors = {
-                    loginUsername: '', loginPassword: '', firstName: '', lastName: '', 
-                    email: '', password: '', confirmPassword: '', agreeTerms: ''
-                };
+                this.errors = { loginUsername: '', loginPassword: '', firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '', password: '', confirmPassword: '', agreeTerms: '' };
+            },
+            showToastMessage(msg) {
+                this.toastMsg = msg;
+                this.toastVisible = true;
+                setTimeout(() => { this.toastVisible = false; }, 2800);
             },
             
             validateLogin() {
-                let isValid = true;
-                this.errors.loginUsername = '';
-                this.errors.loginPassword = '';
-                
-                if (!this.loginData.username.trim()) {
-                    this.errors.loginUsername = 'Username is required';
-                    isValid = false;
-                } else if (this.loginData.username.length < 3) {
-                    this.errors.loginUsername = 'Username must be at least 3 characters';
-                    isValid = false;
-                }
-                
-                if (!this.loginData.password) {
-                    this.errors.loginPassword = 'Password is required';
-                    isValid = false;
-                } else if (this.loginData.password.length < 4) {
-                    this.errors.loginPassword = 'Password must be at least 4 characters';
-                    isValid = false;
-                }
-                return isValid;
+                let ok = true;
+                this.errors.loginUsername = this.errors.loginPassword = '';
+                if (!this.loginData.username.trim()) { this.errors.loginUsername = 'Username required'; ok = false; }
+                else if (this.loginData.username.length < 2) { this.errors.loginUsername = 'Invalid username'; ok = false; }
+                if (!this.loginData.password) { this.errors.loginPassword = 'Password required'; ok = false; }
+                else if (this.loginData.password.length < 4) { this.errors.loginPassword = 'Minimum 4 characters'; ok = false; }
+                return ok;
             },
             
             validateRegister() {
-                let isValid = true;
-                this.errors = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', agreeTerms: '' };
+                let valid = true;
+                this.errors = { firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '', password: '', confirmPassword: '', agreeTerms: '' };
                 
-                if (!this.registerData.firstName.trim()) {
-                    this.errors.firstName = 'First name required';
-                    isValid = false;
-                }
-                if (!this.registerData.lastName.trim()) {
-                    this.errors.lastName = 'Last name required';
-                    isValid = false;
-                }
+                if (!this.registerData.firstName.trim()) { this.errors.firstName = 'First name required'; valid = false; }
+                if (!this.registerData.lastName.trim()) { this.errors.lastName = 'Last name required'; valid = false; }
+                if (!this.registerData.employeeId.trim()) { this.errors.employeeId = 'Employee ID required'; valid = false; }
+                else if (this.registerData.employeeId.length < 3) { this.errors.employeeId = 'Valid Employee ID needed'; valid = false; }
+                
                 const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-                if (!this.registerData.email) {
-                    this.errors.email = 'Email address required';
-                    isValid = false;
-                } else if (!emailRegex.test(this.registerData.email)) {
-                    this.errors.email = 'Enter a valid email address';
-                    isValid = false;
-                } else if (!this.registerData.email.toLowerCase().includes('ecospring')) {
-                    this.errors.email = 'Please use your @ecospring.com company email';
-                    isValid = false;
-                }
-                if (!this.registerData.password) {
-                    this.errors.password = 'Password required';
-                    isValid = false;
-                } else if (this.registerData.password.length < 6) {
-                    this.errors.password = 'Password must be at least 6 characters';
-                    isValid = false;
-                }
-                if (this.registerData.password !== this.registerData.confirmPassword) {
-                    this.errors.confirmPassword = 'Passwords do not match';
-                    isValid = false;
-                }
-                if (!this.registerData.agreeTerms) {
-                    this.errors.agreeTerms = 'You must agree to the terms';
-                    isValid = false;
-                }
-                return isValid;
-            },
-            
-            showMessage(msg, isSuccess = true) {
-                this.toastMessage = msg;
-                this.showToast = true;
-                setTimeout(() => {
-                    this.showToast = false;
-                }, 3000);
+                if (!this.registerData.email) { this.errors.email = 'Email required'; valid = false; }
+                else if (!emailRegex.test(this.registerData.email)) { this.errors.email = 'Invalid email format'; valid = false; }
+                else if (!this.registerData.email.includes('ecospring')) { this.errors.email = 'Use @ecospring.com email address'; valid = false; }
+                
+                const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{3,5}[-\s\.]?[0-9]{4,6}$/im;
+                if (!this.registerData.phone.trim()) { this.errors.phone = 'Phone number required'; valid = false; }
+                else if (!phoneRegex.test(this.registerData.phone) && this.registerData.phone.replace(/[\s\-+()]/g, '').length < 8) { this.errors.phone = 'Enter a valid phone number'; valid = false; }
+                
+                if (!this.registerData.password) { this.errors.password = 'Password required'; valid = false; }
+                else if (this.registerData.password.length < 6) { this.errors.password = 'Password must be at least 6 characters'; valid = false; }
+                else if (!/[A-Z]/.test(this.registerData.password)) { this.errors.password = 'Password must contain at least 1 uppercase letter'; valid = false; }
+                
+                if (this.registerData.password !== this.registerData.confirmPassword) { this.errors.confirmPassword = 'Passwords do not match'; valid = false; }
+                if (!this.registerData.agreeTerms) { this.errors.agreeTerms = 'You must accept terms'; valid = false; }
+                return valid;
             },
             
             async handleLogin() {
                 if (!this.validateLogin()) return;
                 this.loading = true;
-                
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 800));
-                
-                if (this.loginData.remember) {
-                    localStorage.setItem('ecospring_username', this.loginData.username);
-                } else {
-                    localStorage.removeItem('ecospring_username');
-                }
-                
-                this.showMessage(`Welcome back, ${this.loginData.username}! Redirecting to dashboard...`);
+                await new Promise(r => setTimeout(r, 700));
+                if (this.loginData.remember) localStorage.setItem('ecospring_username', this.loginData.username);
+                else localStorage.removeItem('ecospring_username');
                 this.loading = false;
-                // Reset form for demo
-                setTimeout(() => {
-                    alert(`Demo Login Successful!\nUsername: ${this.loginData.username}\nRedirect to dashboard would happen here.`);
-                }, 100);
+                this.showToastMessage(`Welcome back, ${this.loginData.username}! Redirecting to dashboard...`);
+                setTimeout(() => alert(`✅ Demo login success!\nWelcome ${this.loginData.username}\n(production would redirect to dashboard)`), 400);
             },
             
             async handleRegister() {
                 if (!this.validateRegister()) return;
                 this.loading = true;
+                await new Promise(r => setTimeout(r, 1100));
                 
-                await new Promise(resolve => setTimeout(resolve, 900));
-                
-                this.showMessage(`Welcome ${this.registerData.firstName}! Account created successfully.`);
+                // simulate registration payload
+                const userInfo = `${this.registerData.firstName} ${this.registerData.lastName} (ID: ${this.registerData.employeeId})`;
                 this.loading = false;
-                
+                this.showToastMessage(`Welcome ${this.registerData.firstName}! Account created.`);
                 setTimeout(() => {
-                    alert(`Demo Registration Successful!\nWelcome ${this.registerData.firstName} ${this.registerData.lastName}\nEmail: ${this.registerData.email}\nPlease verify your email to continue.`);
+                    alert(`🎉 Registration successful!\n\nName: ${this.registerData.firstName} ${this.registerData.lastName}\nEmployee ID: ${this.registerData.employeeId}\nEmail: ${this.registerData.email}\nPhone: ${this.registerData.phone}\nGender: ${this.registerData.gender || 'Not specified'}\n\nPlease verify your email to continue.`);
                     this.switchToLogin();
-                    // Reset registration form
-                    this.registerData = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', agreeTerms: false };
+                    // reset registration fields
+                    this.registerData = { firstName: '', lastName: '', employeeId: '', email: '', phone: '', gender: '', password: '', confirmPassword: '', agreeTerms: false };
                 }, 300);
             }
         }
