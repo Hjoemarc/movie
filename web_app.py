@@ -6,7 +6,6 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-# Secret key is required for sessions and flashing messages
 app.secret_key = os.urandom(24) 
 
 # Setup Connection
@@ -25,10 +24,15 @@ try:
     suppliers = db.suppliers
     reports = db.reports
     
-    # Auto-initialize Admin account and Finished Product tracker if they don't exist
-    # Note: Password hashing removed for project simplicity
+    # Auto-initialize Admin account and Finished Product tracker
     if not users.find_one({"username": "admin"}):
-        users.insert_one({"username": "admin", "password": "admin123", "role": "Admin"})
+        users.insert_one({
+            "first_name": "System",
+            "last_name": "Admin",
+            "username": "admin", 
+            "password": "admin123", 
+            "role": "Admin"
+        })
         
     if not finished_products.find_one({"product_name": "Bottled Water"}):
         finished_products.insert_one({"product_name": "Bottled Water", "quantity": 0, "date_updated": datetime.now()})
@@ -39,15 +43,12 @@ except Exception as e:
 # READ: Main Router
 @app.route('/', methods=['GET'])
 def index():
-    # If not logged in, force the login view
     if 'user_id' not in session:
         return render_template('index.html', view='login')
 
-    # Determine which page to show (default is dashboard)
     view = request.args.get('view', 'dashboard')
     data = {}
 
-    # Fetch data based on the active view
     if view == 'dashboard':
         data['total_raw'] = raw_materials.count_documents({})
         fp = finished_products.find_one({"product_name": "Bottled Water"})
@@ -57,7 +58,6 @@ def index():
         today = datetime.now().strftime("%Y-%m-%d")
         today_prod = list(production.find({"date": {"$regex": f"^{today}"}}))
         data['today_prod'] = sum(item['quantity_produced'] for item in today_prod)
-        data['total_suppliers'] = suppliers.count_documents({})
 
     elif view == 'inventory':
         data['materials'] = list(raw_materials.find())
@@ -75,27 +75,30 @@ def login():
     
     user = users.find_one({"username": username})
     
-    # Plain text password comparison
     if user and user['password'] == password:
         session['user_id'] = str(user['_id'])
         session['username'] = user['username']
+        session['full_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip() or user['username']
         session['role'] = user['role']
     else:
-        flash("Invalid credentials. Please try again.", "danger")
+        flash("Invalid credentials. Please try again.", "error")
     return redirect(url_for('index'))
 
 # AUTHENTICATION: Register
 @app.route('/register', methods=['POST'])
 def register():
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
     username = request.form.get('username')
     password = request.form.get('password')
-    role = request.form.get('role', 'Staff') # Default role is Staff
+    role = request.form.get('role')
     
-    # Check if username already exists
     if users.find_one({"username": username}):
-        flash("Username already exists! Please choose another.", "danger")
+        flash("Username already exists! Please choose another.", "error")
     else:
         users.insert_one({
+            "first_name": first_name,
+            "last_name": last_name,
             "username": username, 
             "password": password, 
             "role": role
@@ -135,29 +138,25 @@ def produce():
     caps = raw_materials.find_one({"name": "Caps"})
     bottles = raw_materials.find_one({"name": "Bottles"})
     
-    # Check if materials exist and are sufficient
     if not labels or labels['quantity'] < qty:
-        flash("Insufficient Labels in inventory!", "danger")
+        flash("Insufficient Labels in inventory!", "error")
     elif not caps or caps['quantity'] < qty:
-        flash("Insufficient Caps in inventory!", "danger")
+        flash("Insufficient Caps in inventory!", "error")
     elif not bottles or bottles['quantity'] < qty:
-        flash("Insufficient Bottles in inventory!", "danger")
+        flash("Insufficient Bottles in inventory!", "error")
     else:
-        # Deduct Raw Materials
         raw_materials.update_one({"name": "Labels"}, {"$inc": {"quantity": -qty}})
         raw_materials.update_one({"name": "Caps"}, {"$inc": {"quantity": -qty}})
         raw_materials.update_one({"name": "Bottles"}, {"$inc": {"quantity": -qty}})
         
-        # Add Finished Products
         finished_products.update_one(
             {"product_name": "Bottled Water"},
             {"$inc": {"quantity": qty}, "$set": {"date_updated": datetime.now()}}
         )
         
-        # Save History
         production.insert_one({
             "quantity_produced": qty,
-            "produced_by": session['username'],
+            "produced_by": session['full_name'],
             "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         })
         flash(f"Successfully produced {qty} bottles of water!", "success")
@@ -169,7 +168,7 @@ def produce():
 def delete_material(id):
     if 'user_id' in session:
         raw_materials.delete_one({"_id": ObjectId(id)})
-        flash("Material deleted.", "warning")
+        flash("Material deleted.", "success")
     return redirect(url_for('index', view='inventory'))
 
 if __name__ == '__main__':
