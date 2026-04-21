@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecospring | Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f6f9; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen overflow-hidden">
+
+<div class="fixed top-6 right-6 z-50 flex flex-col gap-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
+                     class="flex items-center p-4 rounded-2xl shadow-xl text-sm text-white min-w-[320px] {% if category == 'error' %} bg-rose-500 {% else %} bg-sky-500 {% endif %}">
+                    <span class="flex-1 font-semibold tracking-wide">{{ message }}</span>
+                    <button @click="show = false" class="ml-4 hover:text-white/70">✕</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="flex h-screen w-full bg-white" x-data="{ showLogin: true }">
+    <div class="hidden lg:flex w-[45%] relative bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1548842416-8c4600216503?q=80&w=2070&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#020817]/90 via-[#0369a1]/80 to-[#0ea5e9]/70 mix-blend-multiply"></div>
+        <div class="relative z-10 flex flex-col justify-end p-16 w-full h-full">
+            <div class="w-16 h-16 bg-gradient-to-br from-sky-400 to-cyan-300 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-sky-500/30">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c0 0-8 8.4-8 13a8 8 0 1016 0c0-4.6-8-13-8-13z"/></svg>
+            </div>
+            <h1 class="text-white text-5xl font-extrabold leading-tight mb-6">Purity at <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-200">Scale.</span></h1>
+            <p class="text-sky-100/80 text-lg max-w-md font-medium">The enterprise platform for Ecospring.</p>
+        </div>
+    </div>
+
+    <div class="w-full lg:w-[55%] flex items-center justify-center p-8 bg-sky-50/40 relative overflow-y-auto">
+        <div class="w-full max-w-xl bg-white p-12 rounded-[2rem] shadow-[0_8px_30px_rgb(14,165,233,0.06)] border border-sky-100 min-h-[700px] flex flex-col justify-center relative">
+            
+            <div x-show="showLogin" class="w-full absolute inset-0 p-12 flex flex-col justify-center">
+                <div class="mb-10 text-center">
+                    <h2 class="text-3xl font-extrabold text-[#020817] mb-2">Welcome Back</h2>
+                </div>
+                <form method="POST" action="/login" class="space-y-6">
+                    <input type="text" name="username" placeholder="Username" required class="w-full px-5 py-3.5 rounded-xl border-2 focus:border-sky-500 outline-none font-semibold bg-slate-50/50">
+                    <input type="password" name="password" placeholder="Password" required class="w-full px-5 py-3.5 rounded-xl border-2 focus:border-sky-500 outline-none font-semibold bg-slate-50/50">
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] hover:from-[#0369a1] hover:to-[#0284c7] text-white font-bold py-4 rounded-xl shadow-lg shadow-sky-500/30">Sign In</button>
+                </form>
+                <div class="mt-10 text-center text-sm font-semibold text-slate-500">
+                    New team member? <button @click="showLogin = false" type="button" class="text-sky-600 hover:text-sky-800 ml-1">Create an account</button>
+                </div>
+            </div>
+
+            <div x-show="!showLogin" class="w-full absolute inset-0 p-12 flex flex-col justify-center" style="display: none;">
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-extrabold text-[#020817] mb-2">Create Account</h2>
+                </div>
+                <form method="POST" action="/register" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" name="first_name" placeholder="First Name" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                        <input type="text" name="last_name" placeholder="Last Name" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" name="employee_id" placeholder="Employee ID" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50 text-sky-700">
+                        <select name="gender" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                            <option value="" disabled selected>Gender</option>
+                            <option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="email" name="email" placeholder="Email" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                        <input type="text" name="phone" placeholder="Phone" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" name="username" placeholder="Username" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                        <input type="password" name="password" placeholder="Password" required class="px-4 py-2.5 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50">
+                    </div>
+                    <select name="role" required class="w-full px-4 py-3 rounded-xl border-2 focus:border-sky-500 outline-none text-sm font-semibold bg-slate-50/50 text-sky-700">
+                        <option value="Inventory Staff">Inventory Staff</option><option value="Production">Production</option><option value="Warehouse">Warehouse</option><option value="Admin">Administrator</option>
+                    </select>
+                    <button type="submit" class="w-full bg-[#020817] text-white font-bold py-3.5 rounded-xl shadow-lg mt-2">Submit</button>
+                </form>
+                <div class="mt-6 text-center text-sm font-semibold text-slate-500">
+                    Already have an account? <button @click="showLogin = true" type="button" class="text-sky-600 ml-1">Sign in</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
