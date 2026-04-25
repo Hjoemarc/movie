@@ -1,238 +1,185 @@
-import os
-import re
-import binascii
-import certifi
-from datetime import datetime
-from bson.objectid import ObjectId
-from flask import Flask, request, session, redirect, url_for, render_template, make_response, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from pymongo import MongoClient
+import certifi
+from bson.objectid import ObjectId
+from datetime import datetime
+import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.urandom(24) 
 
-# ==========================================
-# MONGODB SETUP
-# ==========================================
+# Setup Connection
 ca = certifi.where()
 uri = "mongodb+srv://joeanmarkhiolin_db_user:3vYbGdRiCncabJXs@cluster0.7vwb4kd.mongodb.net/"
 
 try:
     client = MongoClient(uri, tlsCAFile=ca)
+    db = client.bottled_water_db
     
-    # Assuming you are storing this in a DB called 'geotrack_db' based on the HTML branding. 
-    # Change to 'client.bottled_water_db' if it belongs in the existing app DB.
-    db = client.geotrack_db
+    users = db.users
+    raw_materials = db.raw_materials
+    production = db.production
+    finished_products = db.finished_products
     
-    # Collections mapping to your old SQL tables
-    users_col = db.users
-    students_col = db.students
-    devices_col = db.student_devices
-    audit_col = db.audit_logs
-    login_settings_col = db.login_customization
-    student_settings_col = db.student_settings
+    # Auto-initialize Admin account and Finished Product tracker if they don't exist
+    if not users.find_one({"username": "admin"}):
+        users.insert_one({
+            "first_name": "System", 
+            "last_name": "Admin",
+            "employee_id": "SYS-001",
+            "gender": "Other",
+            "email": "admin@ecospring.com",
+            "phone": "000-000-0000",
+            "username": "admin", 
+            "password": "admin123", 
+            "role": "Admin",
+            "date_created": datetime.now()
+        })
+    if not finished_products.find_one({"product_name": "Bottled Water"}):
+        finished_products.insert_one({"product_name": "Bottled Water", "quantity": 0, "date_updated": datetime.now()})
 
 except Exception as e:
     print(f"Connection failed: {e}")
 
 # ==========================================
-# HELPER FUNCTIONS
+# AUTHENTICATION ROUTES
 # ==========================================
-def detect_device_info(user_agent):
-    """Device fingerprinting logic translated to Python."""
-    device = {
-        'brand': 'Unknown', 'model': 'Unknown',
-        'type': 'desktop', 'os': 'Unknown',
-        'friendly_name': 'Unregistered Device'
-    }
-    ua_lower = user_agent.lower()
-    
-    if 'mobi' in ua_lower or 'android' in ua_lower or 'iphone' in ua_lower:
-        device['type'] = 'mobile'
-    if 'ipad' in ua_lower or 'tablet' in ua_lower:
-        device['type'] = 'tablet'
-        
-    if 'iphone' in ua_lower:
-        device['os'], device['brand'], device['model'] = 'iOS', 'Apple', 'iPhone'
-    elif 'ipad' in ua_lower:
-        device['os'], device['brand'], device['model'] = 'iOS', 'Apple', 'iPad'
-    elif 'android' in ua_lower:
-        device['os'], device['brand'] = 'Android', 'Android Device'
-        match = re.search(r'; ([^;)]+)\) applewebkit', ua_lower)
-        if match: device['model'] = match.group(1).split('build/')[0].strip().title()
-    elif 'windows' in ua_lower:
-        device['os'], device['brand'] = 'Windows', 'PC'
-    elif 'mac' in ua_lower:
-        device['os'], device['brand'], device['model'] = 'macOS', 'Apple', 'Mac'
-        
-    friendly_parts = []
-    if device['brand'] not in ['Unknown', 'PC']: friendly_parts.append(device['brand'])
-    if device['model'] not in ['Unknown', 'Phone', 'Tablet']: friendly_parts.append(device['model'])
-    if not friendly_parts:
-        friendly_parts.append('Smartphone' if device['type'] == 'mobile' else 'Tablet' if device['type'] == 'tablet' else 'Computer')
-    if device['os'] != 'Unknown': friendly_parts.append(f"({device['os']})")
-        
-    device['friendly_name'] = " ".join(friendly_parts) if friendly_parts else user_agent[:50] + "..."
-    return device
 
-def log_audit(user_id_str, action, details, request_obj):
-    """Logs security events to MongoDB."""
-    audit_col.insert_one({
-        "user_id": user_id_str,
-        "action": action,
-        "details": details,
-        "ip_address": request_obj.remote_addr or 'UNKNOWN',
-        "user_agent": request_obj.headers.get('User-Agent', 'UNKNOWN'),
-        "timestamp": datetime.now()
-    })
-
-# ==========================================
-# LOGIN ROUTE
-# ==========================================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # 1. Check existing session
-    if 'user_id' in session:
-        role = session.get('role')
-        if role == 'admin': return redirect(url_for('admin_dashboard'))
-        elif role == 'teacher': return redirect(url_for('teacher_dashboard'))
-        else: return redirect(url_for('student_dashboard'))
-
-    error_msg = None
-    enable_student_registration = True
-    login_settings = {}
-
-    # Fetch settings from MongoDB
-    for setting in login_settings_col.find({"is_active": 1}):
-        login_settings[setting.get('setting_key')] = setting.get('setting_value')
-
-    reg_setting = student_settings_col.find_one({"setting_key": "enable_student_registration"})
-    if reg_setting:
-        enable_student_registration = bool(int(reg_setting.get('setting_value', 1)))
-
-    # 2. Handle POST Request
     if request.method == 'POST':
-        email_or_user = request.form.get('username')
-        password = request.form.get('password')
+        user = users.find_one({"username": request.form.get('username')})
+        if user and user['password'] == request.form.get('password'):
+            session['user_id'] = str(user['_id'])
+            session['username'] = user['username']
+            session['full_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip() or user['username']
+            session['role'] = user['role']
+            return redirect(url_for('dashboard'))
+        flash("Invalid credentials. Please try again.", "error")
+    return render_template('login.html')
 
-        # Find user by username OR email using $or operator
-        user = users_col.find_one({"$or": [{"username": email_or_user}, {"email": email_or_user}]})
-
-        if user:
-            if password == user.get('password'):
-                user_id_str = str(user['_id']) # Convert ObjectId to string for sessions/relations
-                
-                if user.get('status') == 'pending':
-                    error_msg = "Your account is pending approval. Please contact the administrator."
-                    log_audit(user_id_str, 'login_failed', 'Account pending approval.', request)
-                elif user.get('status') == 'deactivated':
-                    error_msg = "Your account has been deactivated. Please check with your administrator."
-                    log_audit(user_id_str, 'login_failed', 'Account deactivated.', request)
-                else:
-                    allow_login = True
-                    student_pk = None
-                    new_token = None
-
-                    # --- DEVICE LOCK LOGIC (STUDENTS ONLY) ---
-                    if user.get('role') == 'student':
-                        student = students_col.find_one({"user_id": user_id_str})
-                        
-                        if student:
-                            student_pk = str(student['_id'])
-                            
-                            # Get the most recent device for this student
-                            device_cursor = devices_col.find({"student_id": student_pk}).sort("_id", -1).limit(1)
-                            device_list = list(device_cursor)
-                            device_row = device_list[0] if device_list else None
-                            
-                            browser_cookie = request.cookies.get('geo_device_token', '')
-                            user_agent = request.headers.get('User-Agent', 'Unknown Browser')
-                            current_device = detect_device_info(user_agent)
-
-                            if device_row:
-                                registered_token = device_row.get('device_identifier')
-
-                                if browser_cookie != registered_token:
-                                    # Smart Fingerprint Fallback
-                                    db_os_raw = device_row.get('operating_system', '')
-                                    curr_os_raw = current_device['os']
-                                    db_os_base = re.sub(r'[^a-zA-Z]+', '', db_os_raw)
-                                    curr_os_base = re.sub(r'[^a-zA-Z]+', '', curr_os_raw)
-                                    
-                                    if (device_row.get('device_type') == current_device['type'] and 
-                                        device_row.get('device_brand') == current_device['brand'] and 
-                                        db_os_base == curr_os_base):
-                                        
-                                        new_token = binascii.hexlify(os.urandom(32)).decode()
-                                        devices_col.update_one(
-                                            {"_id": device_row['_id']},
-                                            {"$set": {"device_identifier": new_token, "last_used": datetime.now()}}
-                                        )
-                                        log_audit(user_id_str, 'cookie_restored', 'Cookie missing but fingerprint matched. Token regenerated.', request)
-                                    else:
-                                        allow_login = False
-                                        error_msg = "Access Denied: You are attempting to login from an unauthorized device."
-                                        log_audit(user_id_str, 'login_failed', 'Unauthorized device attempt. Original token mismatch.', request)
-                                else:
-                                    devices_col.update_one({"_id": device_row['_id']}, {"$set": {"last_used": datetime.now()}})
-                            else:
-                                # New Device Registration
-                                new_token = binascii.hexlify(os.urandom(32)).decode()
-                                devices_col.insert_one({
-                                    "student_id": student_pk,
-                                    "device_identifier": new_token,
-                                    "device_name": current_device['friendly_name'],
-                                    "device_brand": current_device['brand'],
-                                    "device_model": current_device['model'],
-                                    "device_type": current_device['type'],
-                                    "operating_system": current_device['os'],
-                                    "last_used": datetime.now()
-                                })
-                                log_audit(user_id_str, 'device_registered', f"New device registered: {current_device['friendly_name']}", request)
-                        else:
-                            allow_login = False
-                            error_msg = "Student record not found. Contact admin."
-                            log_audit(user_id_str, 'login_failed', 'Student record not found for student role.', request)
-
-                    # --- FINAL LOGIN EXECUTION ---
-                    if allow_login:
-                        session.clear()
-                        session['user_id'] = user_id_str
-                        session['username'] = user.get('username')
-                        session['full_name'] = user.get('full_name')
-                        session['role'] = user.get('role')
-                        session['profile_pic'] = user.get('profile_pic')
-
-                        if user.get('role') == 'student' and student_pk:
-                            new_session_id = request.cookies.get('session', os.urandom(16).hex())
-                            students_col.update_one(
-                                {"_id": ObjectId(student_pk)},
-                                {"$set": {"active_session_id": new_session_id}}
-                            )
-                            
-                        log_audit(user_id_str, 'login_success', 'User logged in successfully.', request)
-
-                        if user.get('role') == 'admin': resp = make_response(redirect(url_for('admin_dashboard')))
-                        elif user.get('role') == 'teacher': resp = make_response(redirect(url_for('teacher_dashboard')))
-                        else: resp = make_response(redirect(url_for('student_dashboard')))
-
-                        # Set Cookies
-                        if request.form.get('remember_me') == 'on':
-                            resp.set_cookie('geo_login_user', user.get('username', ''), max_age=86400*30, httponly=True)
-                        else:
-                            resp.set_cookie('geo_login_user', '', expires=0)
-
-                        if new_token:
-                            resp.set_cookie('geo_device_token', new_token, max_age=86400*365, httponly=True)
-
-                        return resp
-            else:
-                error_msg = "Incorrect password."
-                log_audit(str(user.get('_id', '')), 'login_failed', 'Incorrect password attempt.', request)
-        else:
-            error_msg = "User not found."
-            log_audit(None, 'login_failed', f'User not found. Attempted username: {email_or_user}', request)
-            
-    if error_msg:
-        flash(error_msg, 'error')
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form.get('username')
+    
+    # Check if username already exists
+    if users.find_one({"username": username}):
+        flash("Username already exists! Please choose another.", "error")
+    else:
+        users.insert_one({
+            "first_name": request.form.get('first_name'),
+            "last_name": request.form.get('last_name'),
+            "employee_id": request.form.get('employee_id'),
+            "gender": request.form.get('gender'),
+            "email": request.form.get('email'),
+            "phone": request.form.get('phone'),
+            "username": username, 
+            "password": request.form.get('password'), 
+            "role": request.form.get('role'),
+            "date_created": datetime.now()
+        })
+        flash("Account created successfully! You can now sign in.", "success")
         
-    return render_template('login.html', login_settings=login_settings, enable_student_registration=enable_student_registration)
+    return redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+# ==========================================
+# PAGE ROUTES (VIEWS)
+# ==========================================
+
+@app.route('/')
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' not in session: return redirect(url_for('login'))
+    
+    data = {
+        'total_raw': raw_materials.count_documents({}),
+        'low_stock': len(list(raw_materials.find({"$expr": {"$lte": ["$quantity", "$reorder_level"]}})))
+    }
+    
+    fp = finished_products.find_one({"product_name": "Bottled Water"})
+    data['total_finished'] = fp['quantity'] if fp else 0
+    
+    today = datetime.now().strftime("%Y-%m-%d")
+    today_prod = list(production.find({"date": {"$regex": f"^{today}"}}))
+    data['today_prod'] = sum(item['quantity_produced'] for item in today_prod)
+    
+    # Pass current_page so the sidebar knows which link to highlight
+    return render_template('dashboard.html', data=data, current_page='dashboard')
+
+@app.route('/inventory')
+def inventory():
+    if 'user_id' not in session: return redirect(url_for('login'))
+    materials = list(raw_materials.find())
+    return render_template('inventory.html', materials=materials, current_page='inventory')
+
+@app.route('/production_page')
+def production_page():
+    if 'user_id' not in session: return redirect(url_for('login'))
+    history = list(production.find().sort("_id", -1).limit(20))
+    return render_template('production.html', history=history, current_page='production')
+
+# ==========================================
+# ACTION ROUTES (DATA PROCESSING)
+# ==========================================
+
+@app.route('/add_material', methods=['POST'])
+def add_material():
+    if 'user_id' not in session: return redirect(url_for('login'))
+    raw_materials.insert_one({
+        "name": request.form.get('name'),
+        "quantity": int(request.form.get('quantity')),
+        "unit": request.form.get('unit'),
+        "reorder_level": int(request.form.get('reorder_level')),
+        "date_added": datetime.now().strftime("%Y-%m-%d")
+    })
+    flash("Material added successfully!", "success")
+    return redirect(url_for('inventory'))
+
+@app.route('/delete_material/<id>', methods=['POST'])
+def delete_material(id):
+    if 'user_id' in session:
+        raw_materials.delete_one({"_id": ObjectId(id)})
+        flash("Material deleted.", "success")
+    return redirect(url_for('inventory'))
+
+@app.route('/produce', methods=['POST'])
+def produce():
+    if 'user_id' not in session: return redirect(url_for('login'))
+    
+    qty = int(request.form.get('quantity'))
+    labels = raw_materials.find_one({"name": "Labels"})
+    caps = raw_materials.find_one({"name": "Caps"})
+    bottles = raw_materials.find_one({"name": "Bottles"})
+    
+    if not labels or labels['quantity'] < qty:
+        flash("Insufficient Labels in inventory!", "error")
+    elif not caps or caps['quantity'] < qty:
+        flash("Insufficient Caps in inventory!", "error")
+    elif not bottles or bottles['quantity'] < qty:
+        flash("Insufficient Bottles in inventory!", "error")
+    else:
+        raw_materials.update_one({"name": "Labels"}, {"$inc": {"quantity": -qty}})
+        raw_materials.update_one({"name": "Caps"}, {"$inc": {"quantity": -qty}})
+        raw_materials.update_one({"name": "Bottles"}, {"$inc": {"quantity": -qty}})
+        
+        finished_products.update_one(
+            {"product_name": "Bottled Water"},
+            {"$inc": {"quantity": qty}, "$set": {"date_updated": datetime.now()}}
+        )
+        
+        production.insert_one({
+            "quantity_produced": qty,
+            "produced_by": session['full_name'],
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+        flash(f"Successfully produced {qty} bottles of water!", "success")
+        
+    return redirect(url_for('production_page'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
