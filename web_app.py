@@ -25,66 +25,22 @@ except Exception as e:
     print(f"Connection failed: {e}")
 
 # ==========================================
-# SETUP ROUTE
+# PUBLIC ROUTE (LANDING PAGE)
 # ==========================================
-@app.route('/setup_db')
-def setup_db():
-    try:
-        if not users.find_one({"username": "admin"}):
-            users.insert_one({
-                "first_name": "System", "last_name": "Admin", "employee_id": "SYS-001",
-                "gender": "Other", "email": "admin@ecospring.com", "phone": "000-000-0000",
-                "username": "admin", "password": "admin123", "role": "Admin",
-                "date_created": datetime.now()
-            })
-        
-        if not finished_products.find_one({"product_name": "Bottled Water"}):
-            finished_products.insert_one({"product_name": "Bottled Water", "quantity": 0, "date_updated": datetime.now()})
-            
-        return "Database successfully initialized! You can now return to the login page."
-    except Exception as e:
-        return f"An error occurred during setup: {e}"
-
-# ==========================================
-# MASTER ROUTER (Replaces individual page routes)
-# ==========================================
-@app.route('/', methods=['GET'])
-def main_app():
-    # Force unauthenticated users to the login view
-    if 'user_id' not in session: 
-        return redirect(url_for('login'))
-    
-    # Grab the requested view from the URL (e.g., /?view=inventory), default to dashboard
-    view = request.args.get('view', 'dashboard')
-    data = {}
-    
-    # Fetch data dynamically based on what part of index.html is being rendered
-    if view == 'dashboard':
-        data = {
-            'total_raw': raw_materials.count_documents({}),
-            'low_stock': len(list(raw_materials.find({"$expr": {"$lte": ["$quantity", "$reorder_level"]}})))
-        }
-        fp = finished_products.find_one({"product_name": "Bottled Water"})
-        data['total_finished'] = fp['quantity'] if fp else 0
-        
-        today = datetime.now().strftime("%Y-%m-%d")
-        today_prod = list(production.find({"date": {"$regex": f"^{today}"}}))
-        data['today_prod'] = sum(item['quantity_produced'] for item in today_prod)
-        
-    elif view == 'inventory':
-        data['materials'] = list(raw_materials.find())
-        
-    elif view == 'production':
-        data['history'] = list(production.find().sort("_id", -1).limit(20))
-        
-    # Always render index.html, but pass the current view and necessary data
-    return render_template('index.html', view=view, data=data)
+@app.route('/')
+def landing_page():
+    # Show index.html to everyone! No login check required.
+    return render_template('index.html')
 
 # ==========================================
 # AUTHENTICATION ROUTES
 # ==========================================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # If the user is already logged in, send them straight to the dashboard
+    if 'user_id' in session:
+        return redirect(url_for('dashboard'))
+
     if request.method == 'POST':
         user = users.find_one({"username": request.form.get('username')})
         if user and user['password'] == request.form.get('password'):
@@ -92,83 +48,34 @@ def login():
             session['username'] = user['username']
             session['full_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip() or user['username']
             session['role'] = user['role']
-            return redirect(url_for('main_app', view='dashboard'))
+            # Redirect to the secure dashboard upon successful login
+            return redirect(url_for('dashboard'))
         flash("Invalid credentials. Please try again.", "error")
     
-    # Render index.html but tell it to show the login screen
-    return render_template('index.html', view='login')
-
-@app.route('/register', methods=['POST'])
-def register():
-    username = request.form.get('username')
-    if users.find_one({"username": username}):
-        flash("Username already exists! Please choose another.", "error")
-    else:
-        users.insert_one({
-            "first_name": request.form.get('first_name'), "last_name": request.form.get('last_name'),
-            "employee_id": request.form.get('employee_id'), "gender": request.form.get('gender'),
-            "email": request.form.get('email'), "phone": request.form.get('phone'),
-            "username": username, "password": request.form.get('password'), 
-            "role": request.form.get('role'), "date_created": datetime.now()
-        })
-        flash("Account created successfully! You can now sign in.", "success")
-    return redirect(url_for('login'))
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    # Redirect back to the landing page when logging out
+    return redirect(url_for('landing_page'))
 
 # ==========================================
-# ACTION ROUTES (DATA PROCESSING)
+# SECURE ROUTES (DASHBOARD)
 # ==========================================
-@app.route('/add_material', methods=['POST'])
-def add_material():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    raw_materials.insert_one({
-        "name": request.form.get('name'), "quantity": int(request.form.get('quantity')),
-        "unit": request.form.get('unit'), "reorder_level": int(request.form.get('reorder_level')),
-        "date_added": datetime.now().strftime("%Y-%m-%d")
-    })
-    flash("Material added successfully!", "success")
-    return redirect(url_for('main_app', view='inventory'))
-
-@app.route('/delete_material/<id>', methods=['POST'])
-def delete_material(id):
-    if 'user_id' in session:
-        raw_materials.delete_one({"_id": ObjectId(id)})
-        flash("Material deleted.", "success")
-    return redirect(url_for('main_app', view='inventory'))
-
-@app.route('/produce', methods=['POST'])
-def produce():
-    if 'user_id' not in session: return redirect(url_for('login'))
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    # Block unauthenticated users
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
     
-    qty = int(request.form.get('quantity'))
-    labels = raw_materials.find_one({"name": "Labels"})
-    caps = raw_materials.find_one({"name": "Caps"})
-    bottles = raw_materials.find_one({"name": "Bottles"})
+    view = request.args.get('view', 'dashboard')
+    data = {}
     
-    if not labels or labels['quantity'] < qty: flash("Insufficient Labels in inventory!", "error")
-    elif not caps or caps['quantity'] < qty: flash("Insufficient Caps in inventory!", "error")
-    elif not bottles or bottles['quantity'] < qty: flash("Insufficient Bottles in inventory!", "error")
-    else:
-        raw_materials.update_one({"name": "Labels"}, {"$inc": {"quantity": -qty}})
-        raw_materials.update_one({"name": "Caps"}, {"$inc": {"quantity": -qty}})
-        raw_materials.update_one({"name": "Bottles"}, {"$inc": {"quantity": -qty}})
-        
-        finished_products.update_one(
-            {"product_name": "Bottled Water"},
-            {"$inc": {"quantity": qty}, "$set": {"date_updated": datetime.now()}}
-        )
-        
-        production.insert_one({
-            "quantity_produced": qty, "produced_by": session['full_name'],
-            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
-        flash(f"Successfully produced {qty} bottles of water!", "success")
-        
-    return redirect(url_for('main_app', view='production'))
+    # We will expand this logic later when building out the student/teacher specific data
+    
+    # Render the secure internal dashboard
+    return render_template('dashboard.html', view=view, data=data)
 
 if __name__ == '__main__':
     app.run(debug=True)
