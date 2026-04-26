@@ -2,427 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Login | {{ login_settings.get('institution_name', 'Zamboanga Peninsula Polytechnic State University') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Academia Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-color: {{ login_settings.get('primary_color', '#0056A6') }};
-            --primary-hover: {{ login_settings.get('primary_hover', '#003D75') }};
-            --secondary-color: {{ login_settings.get('secondary_color', '#F9A825') }};
-            --bg-color: {{ login_settings.get('bg_color', '#F0F8FF') }};
-            --card-bg: {{ login_settings.get('card_bg', '#FFFFFF') }};
-            --glass-start: {{ login_settings.get('glass_gradient_start', 'rgba(255, 255, 255, 0.25)') }};
-            --glass-end: {{ login_settings.get('glass_gradient_end', 'rgba(255, 255, 255, 0.1)') }};
-            --glass-border: {{ login_settings.get('glass_border_color', 'rgba(255, 255, 255, 0.2)') }};
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .bg-glass { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            background-color: var(--bg-color);
-            position: relative;
-        }
-
-        @media screen and (max-width: 768px) {
-            .form-control, input {
-                font-size: 16px !important;
-            }
-        }
-
-        .background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            /* Fallback to default image if setting isn't found */
-            background-image: url('{{ url_for("static", filename="images/login/" + login_settings.get("login_background", "default_login.jpg")) if login_settings.get("login_background") else "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1470&auto=format&fit=crop" }}');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.1;
-            z-index: 1;
-        }
-
-        .login-container {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 850px;
-        }
-
-        .login-card {
-            display: flex;
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            min-height: 480px;
-            width: 100%;
-        }
-
-        .login-left {
-            flex: 1;
-            background: linear-gradient(135deg, var(--glass-start), var(--glass-end));
-            position: relative;
-            overflow: hidden;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .login-left::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('{{ url_for("static", filename="images/login/" + login_settings.get("login_background", "default_login.jpg")) if login_settings.get("login_background") else "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1470&auto=format&fit=crop" }}');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        .left-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            color: white;
-        }
-
-        .page-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            line-height: 1.2;
-        }
-
-        .page-subtitle {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 25px;
-            font-weight: 400;
-        }
-
-        .institution-info {
-            margin-top: auto;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .institution-name {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0.9;
-        }
-
-        .login-right {
-            flex: 1;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: var(--card-bg);
-            animation: fadeIn 0.5s ease-out 0.1s both;
-        }
-
-        .top-logo { margin-bottom: 25px; }
-
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .logo-icon {
-            background: var(--primary-color);
-            width: 42px; height: 42px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.1rem;
-            box-shadow: 0 3px 10px rgba(0, 86, 166, 0.2);
-        }
-
-        .logo-text { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
-        .logo-text span { color: var(--secondary-color); }
-
-        .welcome-header { margin-bottom: 25px; }
-        .welcome-title { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
-        .welcome-subtitle { color: #64748b; font-size: 0.9rem; font-weight: 400; }
-
-        .alert-danger {
-            background: rgba(220, 53, 69, 0.1);
-            border: 1px solid rgba(220, 53, 69, 0.2);
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: #dc3545;
-            font-size: 0.8rem;
-            margin-bottom: 15px;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        .alert-danger i { flex-shrink: 0; }
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-weight: 500; color: #475569; font-size: 0.85rem; margin-bottom: 5px; }
-        .input-wrapper { position: relative; }
-        .form-control {
-            width: 100%; height: 42px; padding: 0 12px;
-            border: 1.5px solid #e2e8f0; border-radius: 8px;
-            font-size: 0.9rem; font-family: 'Poppins', sans-serif;
-            transition: all 0.3s; background: #f8fafc;
-        }
-        .form-control:focus {
-            outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 86, 166, 0.1); background: white;
-        }
-
-        .password-toggle {
-            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; color: #94a3b8;
-            cursor: pointer; font-size: 0.9rem; padding: 3px; transition: color 0.2s;
-        }
-        .password-toggle:hover { color: var(--primary-color); }
-
-        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.85rem; }
-        .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .remember-checkbox {
-            width: 14px; height: 14px; border: 2px solid #cbd5e1;
-            border-radius: 3px; cursor: pointer; transition: all 0.2s;
-        }
-        .remember-checkbox:checked { background-color: var(--primary-color); border-color: var(--primary-color); }
-        .remember-text { color: #64748b; font-weight: 500; }
-
-        .forgot-link { color: var(--primary-color); text-decoration: none; font-weight: 600; transition: color 0.2s; }
-        .forgot-link:hover { color: var(--primary-hover); text-decoration: underline; }
-
-        .login-button {
-            width: 100%; height: 42px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-            border: none; border-radius: 8px; color: white;
-            font-size: 0.95rem; font-weight: 600; font-family: 'Poppins', sans-serif;
-            cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            margin-bottom: 20px; box-shadow: 0 3px 10px rgba(0, 86, 166, 0.15);
-        }
-        .login-button:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(0, 86, 166, 0.2); }
-        .login-button:active { transform: translateY(0); }
-
-        .register-link { text-align: center; margin-bottom: 15px; color: #64748b; font-size: 0.85rem; }
-        .register-link a { color: var(--primary-color); font-weight: 600; text-decoration: none; margin-left: 4px; transition: color 0.2s; }
-        .register-link a:hover { color: var(--primary-hover); text-decoration: underline; }
-
-        .registration-disabled {
-            text-align: center; margin-bottom: 15px; color: #dc3545;
-            font-size: 0.8rem; background: rgba(220, 53, 69, 0.05);
-            border: 1px solid rgba(220, 53, 69, 0.1); border-radius: 6px; padding: 8px;
-        }
-
-        .copyright { text-align: center; margin-top: 15px; color: #94a3b8; font-size: 0.75rem; }
-
-        @media (max-width: 900px) {
-            .login-card { flex-direction: column; max-width: 450px; margin: 0 auto; min-height: auto; }
-            .login-left { min-height: 220px; padding: 25px; border-right: none; border-bottom: 1px solid var(--glass-border); }
-            .login-right { padding: 25px; }
-            .page-title { font-size: 1.5rem; }
-            .welcome-title { font-size: 1.3rem; }
-            .logo-text { font-size: 1.3rem; }
-        }
-
-        @media (max-width: 480px) {
-            .login-left, .login-right { padding: 20px; }
-            .page-title { font-size: 1.3rem; }
-            .welcome-title { font-size: 1.1rem; }
-            .logo-text { font-size: 1.2rem; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .left-content { animation: fadeIn 0.5s ease-out both; }
     </style>
 </head>
-<body>
-    <div class="background-image"></div>
-
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-left">
-                <div class="left-content">
-                    <h1 class="page-title">{{ login_settings.get('login_title', 'Academic Portal') }}</h1>
-                    <p class="page-subtitle">{{ login_settings.get('login_subtitle', 'Excellence in Technical Education') }}</p>
-                </div>
-
-                <div class="institution-info">
-                    <div class="institution-name">
-                        <i class="fas fa-university"></i>
-                        {{ login_settings.get('institution_name', 'Zamboanga Peninsula Polytechnic State University') }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="login-right">
-                <div class="top-logo">
-                    <div class="brand-container">
-                        <div class="logo-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div class="logo-text">Geo<span>Track</span></div>
-                    </div>
-                    
-                    <div class="welcome-header">
-                        <h2 class="welcome-title">Welcome Back</h2>
-                        <p class="welcome-subtitle">Sign in to your account</p>
-                    </div>
-                </div>
-
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            {% if category == 'error' %}
-                                <div class="alert-danger">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <span>{{ message }}</span>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-
-                <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
-                    <div class="form-group">
-                        <label for="username" class="form-label">Username or Email</label>
-                        <input type="text" 
-                               id="username" 
-                               name="username" 
-                               class="form-control" 
-                               placeholder="Enter username or email"
-                               value="{{ request.cookies.get('geo_login_user', '') }}" 
-                               required
-                               autocomplete="username">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <div class="input-wrapper">
-                            <input type="password" 
-                                   id="password" 
-                                   name="password" 
-                                   class="form-control" 
-                                   placeholder="Enter password"
-                                   required
-                                   autocomplete="current-password">
-                            <button type="button" class="password-toggle" id="togglePassword">
-                                <i class="fas fa-eye-slash"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-options">
-                        <label class="remember-me">
-                            <input type="checkbox" 
-                                   id="rememberMe" 
-                                   name="remember_me" 
-                                   class="remember-checkbox"
-                                   {% if request.cookies.get('geo_login_user') %}checked{% endif %}>
-                            <span class="remember-text">Remember me</span>
-                        </label>
-                        <a href="#" class="forgot-link">Forgot password?</a>
-                    </div>
-
-                    <button type="submit" class="login-button">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Sign In</span>
-                    </button>
-
-                    {% if enable_student_registration %}
-                        <div class="register-link">
-                            Don't have an account?
-                            <a href="#">Create Account</a>
-                        </div>
-                    {% else %}
-                        <div class="registration-disabled">
-                            <i class="fas fa-info-circle"></i>
-                            <span>New student registration is currently disabled. Please contact the administrator.</span>
-                        </div>
-                    {% endif %}
-                </form>
-
-                <div class="copyright">
-                    © {{ range(2023, 2026) | random }} All Rights Reserved
-                </div>
-            </div>
-        </div>
+<body class="min-h-screen flex items-center justify-center relative bg-slate-100 overflow-hidden">
+    
+    <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover" alt="University Campus">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-blue-900/70 mix-blend-multiply"></div>
     </div>
 
-    <script>
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = togglePassword.querySelector('i');
+    <div class="relative z-10 w-full max-w-md p-8 sm:p-10 bg-glass rounded-[2rem] shadow-2xl border border-white/20 mx-4">
+        
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl mb-4 shadow-lg shadow-indigo-500/30">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Academia Portal</h1>
+            <p class="text-sm text-slate-500 mt-1 font-medium">Secure access to your dashboard</p>
+        </div>
 
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            
-            if (type === 'password') {
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            }
-        });
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="p-4 mb-6 text-sm rounded-xl font-medium flex items-center gap-3
+                        {% if category == 'error' %}bg-rose-50 text-rose-600 border border-rose-100
+                        {% else %}bg-emerald-50 text-emerald-600 border border-emerald-100{% endif %}">
+                        
+                        {% if category == 'error' %}
+                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {% else %}
+                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
+        <form action="/login" method="POST" class="space-y-5">
             
-            if (!username || !password) {
-                e.preventDefault();
-                alert('Please fill in all required fields.');
-                return false;
-            }
-            
-            const submitBtn = this.querySelector('.login-button');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Signing in...</span>';
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 3000);
-        });
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Account Role</label>
+                <div class="relative">
+                    <select name="role" required class="w-full px-4 py-3.5 rounded-xl border-2 border-slate-100 bg-white/50 focus:bg-white focus:border-indigo-500 outline-none transition-all text-slate-700 font-semibold appearance-none cursor-pointer">
+                        <option value="" disabled selected>Select your portal...</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+            </div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const usernameField = document.getElementById('username');
-            if (usernameField && !usernameField.value) {
-                usernameField.focus();
-            }
-        });
-    </script>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Username / ID Number</label>
+                <input type="text" name="username" required placeholder="Enter your ID" class="w-full px-4 py-3.5 rounded-xl border-2 border-slate-100 bg-white/50 focus:bg-white focus:border-indigo-500 outline-none transition-all text-slate-800 font-semibold placeholder-slate-300">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Password</label>
+                <input type="password" name="password" required placeholder="••••••••" class="w-full px-4 py-3.5 rounded-xl border-2 border-slate-100 bg-white/50 focus:bg-white focus:border-indigo-500 outline-none transition-all text-slate-800 font-semibold placeholder-slate-300">
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+                <label class="flex items-center gap-2 cursor-pointer group">
+                    <input type="checkbox" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+                    <span class="text-sm font-semibold text-slate-500 group-hover:text-slate-700 transition-colors">Remember me</span>
+                </label>
+                <a href="#" class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="w-full bg-[#0f172a] hover:bg-indigo-600 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition-all duration-300 mt-4 group flex justify-center items-center gap-2">
+                Sign In to Portal
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+            
+        </form>
+    </div>
 </body>
 </html>
