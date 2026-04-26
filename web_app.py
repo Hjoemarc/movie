@@ -54,6 +54,47 @@ def login():
     
     return render_template('login.html')
 
+# Replace your current /register route with this:
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # If they visit /register directly via URL or clicking the link, show the HTML page
+    if request.method == 'GET':
+        return render_template('register.html')
+        
+    # If they submit the form, process the data
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # 1. Check if passwords match
+        if password != confirm_password:
+            flash("Passwords do not match! Please try again.", "error")
+            return redirect(url_for('register'))
+            
+        # 2. Check if username already exists
+        if users.find_one({"username": username}):
+            flash("Username already exists! Please choose another.", "error")
+            return redirect(url_for('register'))
+            
+        # 3. If everything is good, insert into MongoDB
+        users.insert_one({
+            "full_name": request.form.get('full_name').upper(), # Force uppercase in database
+            "school_id": request.form.get('school_id'),
+            "username": username, 
+            "email": request.form.get('email'),
+            "gender": request.form.get('gender'),
+            "year": request.form.get('year'),
+            "section": request.form.get('section'),
+            "password": password, 
+            "role": "Student", # Automatic student registration
+            "date_created": datetime.now()
+        })
+        
+        flash("Account created successfully! You can now sign in.", "success")
+        return redirect(url_for('login'))
+
+
 @app.route('/logout')
 def logout():
     session.clear()
