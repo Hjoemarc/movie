@@ -38,36 +38,21 @@
                 <span class="font-extrabold text-xl tracking-tight text-slate-900">Marc Niloih</span>
             </a>
 
-            <div class="mb-8">
+            <div class="mb-10">
                 <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
-                <p class="text-slate-500 mt-2 font-medium">Please enter your details to sign in.</p>
+                <p class="text-slate-500 mt-2 font-medium">Please enter your credentials to sign in.</p>
             </div>
 
-            <form action="/login" method="POST" class="space-y-5">
+            <form action="/login" method="POST" class="space-y-6">
                 
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Account Type</label>
-                    <div class="relative">
-                        <select name="role" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none text-slate-700 font-semibold appearance-none bg-white transition-all">
-                            <option value="" disabled selected>Select your role...</option>
-                            <option value="student">Student</option>
-                            <option value="teacher">Teacher</option>
-                            <option value="admin">Administrator</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
-                    </div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Username or ID</label>
+                    <input type="text" name="username" required placeholder="Enter your ID" class="w-full px-4 py-3.5 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none text-slate-900 font-semibold placeholder-slate-400 transition-all">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Username or ID</label>
-                    <input type="text" name="username" required placeholder="Enter your ID" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none text-slate-900 font-semibold placeholder-slate-400 transition-all">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Password</label>
-                    <input type="password" name="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none text-slate-900 font-semibold placeholder-slate-400 transition-all">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Password</label>
+                    <input type="password" name="password" required placeholder="••••••••" class="w-full px-4 py-3.5 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none text-slate-900 font-semibold placeholder-slate-400 transition-all">
                 </div>
 
                 <div class="flex items-center justify-between pt-1 pb-4">
@@ -78,25 +63,31 @@
                     <a href="#" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-colors flex justify-center items-center gap-2">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-xl shadow-md transition-colors flex justify-center items-center gap-2">
                     Sign In
                 </button>
             </form>
             
             <p class="text-center text-sm font-semibold text-slate-500 mt-8">
-                Don't have an account? <a href="#" class="text-blue-600 hover:underline">Contact Administrator</a>
+                Don't have an account? <a href="#" class="text-blue-600 hover:underline ml-1">Create Account</a>
             </p>
         </div>
     </div>
 
     <div class="hidden lg:block lg:w-1/2 relative">
         <div class="absolute inset-0 bg-blue-900/40 mix-blend-multiply z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/20 to-transparent z-10"></div>
         
-        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="University Campus">
+        <img src="https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop" 
+             class="absolute inset-0 w-full h-full object-cover" 
+             alt="ZPPSU Campus">
         
-        <div class="absolute bottom-0 left-0 p-16 z-20 text-white">
-            <h2 class="text-4xl font-extrabold mb-4 leading-tight">Empowering education <br>through technology.</h2>
+        <div class="absolute bottom-0 left-0 p-16 z-20 text-white w-full">
+            <div class="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-bold uppercase tracking-widest">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 7l11 5 9-4.09V17h2V7L12 2z"></path><path d="M3 13.18v4L12 21l9-3.82v-4L12 17l-9-3.82z"></path></svg>
+                ZPPSU Portal
+            </div>
+            <h2 class="text-4xl font-extrabold mb-4 leading-tight text-white">Empowering education <br>through technology.</h2>
             <p class="text-blue-100 font-medium max-w-md">Access your academic records, submit assignments, and engage with your peers in one unified platform.</p>
         </div>
     </div>
