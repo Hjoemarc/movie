@@ -6,7 +6,8 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24) 
+# FIX: Use a static secret key or environment variable so sessions don't break on Vercel restarts
+app.secret_key = os.environ.get('SECRET_KEY', 'my_super_secret_static_key_123')
 
 # Setup Connection
 ca = certifi.where()
@@ -20,26 +21,39 @@ try:
     raw_materials = db.raw_materials
     production = db.production
     finished_products = db.finished_products
-    
-    # Auto-initialize Admin account and Finished Product tracker if they don't exist
-    if not users.find_one({"username": "admin"}):
-        users.insert_one({
-            "first_name": "System", 
-            "last_name": "Admin",
-            "employee_id": "SYS-001",
-            "gender": "Other",
-            "email": "admin@ecospring.com",
-            "phone": "000-000-0000",
-            "username": "admin", 
-            "password": "admin123", 
-            "role": "Admin",
-            "date_created": datetime.now()
-        })
-    if not finished_products.find_one({"product_name": "Bottled Water"}):
-        finished_products.insert_one({"product_name": "Bottled Water", "quantity": 0, "date_updated": datetime.now()})
 
 except Exception as e:
     print(f"Connection failed: {e}")
+
+# ==========================================
+# SETUP ROUTE (Run this once to initialize DB)
+# ==========================================
+# FIX: Moved global DB queries here to prevent Vercel 500 timeout errors on cold boots.
+@app.route('/setup_db')
+def setup_db():
+    try:
+        # Auto-initialize Admin account if it doesn't exist
+        if not users.find_one({"username": "admin"}):
+            users.insert_one({
+                "first_name": "System", 
+                "last_name": "Admin",
+                "employee_id": "SYS-001",
+                "gender": "Other",
+                "email": "admin@ecospring.com",
+                "phone": "000-000-0000",
+                "username": "admin", 
+                "password": "admin123", 
+                "role": "Admin",
+                "date_created": datetime.now()
+            })
+        
+        # Auto-initialize Finished Product tracker if it doesn't exist
+        if not finished_products.find_one({"product_name": "Bottled Water"}):
+            finished_products.insert_one({"product_name": "Bottled Water", "quantity": 0, "date_updated": datetime.now()})
+            
+        return "Database successfully initialized! You can now return to the login page."
+    except Exception as e:
+        return f"An error occurred during setup: {e}"
 
 # ==========================================
 # AUTHENTICATION ROUTES
