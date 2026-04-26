@@ -17,10 +17,7 @@ try:
     db = client.school_project
     
     users = db.users
-    raw_materials = db.raw_materials
-    production = db.production
-    finished_products = db.finished_products
-
+    
 except Exception as e:
     print(f"Connection failed: {e}")
 
