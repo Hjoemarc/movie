@@ -14,7 +14,7 @@ uri = "mongodb+srv://joeanmarkhiolin_db_user:3vYbGdRiCncabJXs@cluster0.7vwb4kd.m
 
 try:
     client = MongoClient(uri, tlsCAFile=ca)
-    db = client.bottled_water_db
+    db = client.school_project
     
     users = db.users
     raw_materials = db.raw_materials
