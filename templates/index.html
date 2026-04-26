@@ -1,145 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Academia Hub</title>
+    <title>Academia Hub | Enterprise Academic Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f4f8; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
         
-        .card-premium {
-            background: #ffffff;
-            border-radius: 1.5rem;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.05), 0 8px 10px -6px rgba(37, 99, 235, 0.01);
-            transition: all 0.3s ease;
+        .glass-nav { background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { 
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.1) 0%, rgba(15, 23, 42, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .card-premium:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1), 0 10px 10px -5px rgba(37, 99, 235, 0.04);
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15), inset 0 0 20px rgba(59, 130, 246, 0.05);
         }
-        .sidebar-gradient { background: linear-gradient(180deg, #081229 0%, #0f172a 100%); }
+        .text-gradient { background: linear-gradient(to right, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="text-slate-800 antialiased h-screen overflow-hidden flex">
+<body class="antialiased selection:bg-blue-500 selection:text-white relative overflow-x-hidden">
 
-    <aside class="w-72 sidebar-gradient text-slate-300 flex flex-col shadow-2xl z-20 relative">
-        <div class="h-28 flex items-center px-8 border-b border-white/5">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-blue-500/20 text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-900/30 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-900/20 rounded-full blur-[120px]"></div>
+    </div>
+
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
+                    </div>
+                    <span class="font-extrabold text-xl tracking-tight text-white">Academia Hub</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#features" class="text-slate-300 hover:text-white transition-colors font-medium text-sm">Capabilities</a>
+                    </div>
+                </div>
+                <div>
+                    <a href="/login" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] border border-blue-400/50">
+                        Access Portal
+                    </a>
+                </div>
             </div>
-            <div>
-                <h1 class="text-white font-extrabold text-xl tracking-wide">Academia</h1>
-                <span class="text-[10px] uppercase tracking-[0.2em] text-blue-400 font-bold block mt-0.5">Portal Hub</span>
-            </div>
         </div>
-        
-        <div class="px-8 py-6">
-            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Navigation</p>
-            <nav class="space-y-2">
-                <a href="/?view=dashboard" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'dashboard' %}bg-blue-600 text-white font-semibold shadow-md shadow-blue-900/50{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
-                    <svg class="w-5 h-5 mr-4 {% if view != 'dashboard' %}text-blue-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg>
-                    Overview
-                </a>
-                <a href="/?view=inventory" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'inventory' %}bg-blue-600 text-white font-semibold shadow-md shadow-blue-900/50{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
-                    <svg class="w-5 h-5 mr-4 {% if view != 'inventory' %}text-blue-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    My Courses
-                </a>
-                <a href="/?view=production" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'production' %}bg-blue-600 text-white font-semibold shadow-md shadow-blue-900/50{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
-                    <svg class="w-5 h-5 mr-4 {% if view != 'production' %}text-blue-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Grades & Tasks
-                </a>
-            </nav>
-        </div>
-        
-        <div class="mt-auto p-6 border-t border-white/5">
-            <a href="/logout" class="flex items-center justify-center w-full px-4 py-3.5 text-sm font-bold text-slate-300 bg-white/5 rounded-xl hover:bg-white/10 hover:text-white transition-colors border border-white/5">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Secure Sign Out
-            </a>
-        </div>
-    </aside>
+    </nav>
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-        <div class="absolute top-0 left-1/4 w-1/2 h-64 bg-blue-300/20 blur-[120px] pointer-events-none z-0"></div>
-
-        <header class="h-28 bg-white/60 backdrop-blur-xl border-b border-slate-200/50 flex items-center justify-between px-10 z-10 flex-shrink-0">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900 capitalize tracking-tight">{{ view }}</h2>
-                <p class="text-sm text-slate-500 font-medium mt-1">Welcome back to your workspace.</p>
+    <div class="relative z-10 pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-900/30 border border-blue-500/30 text-blue-300 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-sm">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                System v2.0 is Live
             </div>
             
-            <div class="flex items-center gap-4 bg-white py-2 px-3 pl-6 rounded-full border border-slate-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-                <div class="text-right">
-                    <p class="text-sm font-bold text-slate-900">{{ session.get('full_name', 'Student Name') }}</p>
-                    <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{{ session.get('role', 'Student') }}</p>
-                </div>
-                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 text-white flex items-center justify-center font-bold text-lg shadow-inner ring-4 ring-blue-50">
-                    {{ session.get('full_name', 'U')[0] }}
-                </div>
-            </div>
-        </header>
-
-        <div class="flex-1 overflow-y-auto p-10 z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+                The Future of <br>
+                <span class="text-gradient">Academic Management.</span>
+            </h1>
             
-            {% if view == 'dashboard' %}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <div class="card-premium p-8 flex flex-col justify-between">
-                    <div class="flex justify-between items-start mb-6">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Enrolled Courses</h3>
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></div>
-                    </div>
-                    <div>
-                        <p class="text-4xl font-extrabold text-slate-900">6</p>
-                        <p class="text-sm text-blue-600 mt-2 font-semibold">Active this semester</p>
-                    </div>
-                </div>
-
-                <div class="card-premium p-8 flex flex-col justify-between">
-                    <div class="flex justify-between items-start mb-6">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Pending Tasks</h3>
-                        <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg></div>
-                    </div>
-                    <div>
-                        <p class="text-4xl font-extrabold text-slate-900">12</p>
-                        <p class="text-sm text-sky-600 mt-2 font-semibold">Assignments due soon</p>
-                    </div>
-                </div>
-
-                <div class="card-premium p-8 flex flex-col justify-between bg-gradient-to-br from-blue-700 to-blue-900 text-white relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                    <div class="flex justify-between items-start mb-6 relative z-10">
-                        <h3 class="text-xs font-bold text-blue-200 uppercase tracking-widest">Current GPA</h3>
-                        <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm text-white flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-4xl font-extrabold">3.85</p>
-                        <p class="text-sm text-blue-200 mt-2 font-semibold">Top 10% of class</p>
-                    </div>
-                </div>
+            <p class="mt-4 max-w-2xl text-lg md:text-xl text-slate-400 mx-auto font-medium leading-relaxed mb-12">
+                A unified, enterprise-grade platform combining geofenced attendance, automated grading analytics, and real-time student engagement. Designed for institutions that demand excellence.
+            </p>
+            
+            <div class="flex justify-center gap-4">
+                <a href="#features" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-full font-bold transition-all border border-slate-700">
+                    Explore Features
+                </a>
+                <a href="/login" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-full font-bold transition-all shadow-lg shadow-blue-600/25 flex items-center gap-2">
+                    Sign In
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
             </div>
-
-            <div class="card-premium p-10 min-h-[400px]">
-                <div class="border-b border-slate-100 pb-6 mb-6">
-                    <h3 class="text-xl font-bold text-slate-900">Recent Activity</h3>
-                    <p class="text-sm font-medium text-slate-500 mt-1">Your latest updates will appear here.</p>
-                </div>
-                <div class="flex items-center justify-center h-48 text-slate-400 font-medium">
-                    Content for {{ view }} loaded successfully.
-                </div>
-            </div>
-            {% endif %}
-
         </div>
-    </main>
-</div>
+    </div>
+
+    <div id="features" class="relative z-10 py-24 bg-slate-900/50 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-6">Enterprise Capabilities</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">A comprehensive suite of tools engineered to streamline administrative tasks, empower educators, and engage students.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div class="glass-card rounded-3xl p-8 flex flex-col h-full xl:col-span-4 text-center">
+                   <h3 class="text-xl font-bold text-white mb-2">Full modules loaded in the portal.</h3>
+                   <p class="text-slate-400 text-sm">Log in to view Attendance Management, Grading Systems, and Student Engagement Dashboards.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
