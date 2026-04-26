@@ -1,61 +1,103 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Academia Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f4f8; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+        
+        .card-premium {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.05), 0 8px 10px -6px rgba(37, 99, 235, 0.01);
+            transition: all 0.3s ease;
+        }
+        .card-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1), 0 10px 10px -5px rgba(37, 99, 235, 0.04);
+        }
+        .sidebar-gradient { background: linear-gradient(180deg, #081229 0%, #0f172a 100%); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen overflow-hidden flex">
 
-{% block content %}
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-    
-    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between">
-        <div class="flex justify-between items-start mb-6">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Raw Materials</h3>
-            <div class="p-3 bg-sky-50 text-sky-600 rounded-xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+    <aside class="w-72 sidebar-gradient text-slate-300 flex flex-col shadow-2xl z-20 relative">
+        <div class="h-28 flex items-center px-8 border-b border-white/5">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-blue-500/20 text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-white font-extrabold text-xl tracking-wide">Academia</h1>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-blue-400 font-bold block mt-0.5">Portal Hub</span>
             </div>
         </div>
-        <div>
-            <p class="text-4xl font-extrabold text-[#020817]">{{ data.total_raw }}</p>
-            <p class="text-sm text-sky-600 mt-2 font-semibold">Active Inventory</p>
+        
+        <div class="px-8 py-6">
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Navigation</p>
+            <nav class="space-y-2">
+                <a href="/dashboard?view=dashboard" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'dashboard' %}bg-blue-600 text-white font-semibold shadow-md shadow-blue-900/50{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
+                    <svg class="w-5 h-5 mr-4 {% if view != 'dashboard' %}text-blue-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg>
+                    Overview
+                </a>
+                <a href="/dashboard?view=courses" class="flex items-center px-4 py-3.5 rounded-xl transition-all duration-200 {% if view == 'courses' %}bg-blue-600 text-white font-semibold shadow-md shadow-blue-900/50{% else %}hover:bg-white/5 hover:text-white font-medium{% endif %}">
+                    <svg class="w-5 h-5 mr-4 {% if view != 'courses' %}text-blue-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    My Courses
+                </a>
+            </nav>
         </div>
-    </div>
-    
-    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between">
-        <div class="flex justify-between items-start mb-6">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Finished Products</h3>
-            <div class="p-3 bg-cyan-50 text-cyan-600 rounded-xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-            </div>
+        
+        <div class="mt-auto p-6 border-t border-white/5">
+            <a href="/logout" class="flex items-center justify-center w-full px-4 py-3.5 text-sm font-bold text-slate-300 bg-white/5 rounded-xl hover:bg-white/10 hover:text-white transition-colors border border-white/5">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Secure Sign Out
+            </a>
         </div>
-        <div>
-            <p class="text-4xl font-extrabold text-[#020817]">{{ data.total_finished }}</p>
-            <p class="text-sm text-cyan-600 mt-2 font-semibold">Bottles in Stock</p>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-100 p-7 card-hover flex flex-col justify-between relative overflow-hidden">
-        <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-50 rounded-full z-0"></div>
-        <div class="flex justify-between items-start mb-6 relative z-10">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Stock Alerts</h3>
-            <div class="p-3 bg-red-100 text-red-600 rounded-xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-        </div>
-        <div class="relative z-10">
-            <p class="text-4xl font-extrabold text-[#020817]">{{ data.low_stock }}</p>
-            <p class="text-sm text-red-500 mt-2 font-semibold">Items Require Restock</p>
-        </div>
-    </div>
-    
-    <div class="bg-gradient-to-br from-sky-500 to-cyan-600 rounded-[1.5rem] shadow-lg shadow-sky-500/20 p-7 flex flex-col justify-between relative overflow-hidden text-white card-hover">
-        <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-        <div class="flex justify-between items-start mb-6 relative z-10">
-            <h3 class="text-xs font-bold text-sky-100 uppercase tracking-widest">Daily Output</h3>
-            <div class="p-3 bg-white/20 text-white rounded-xl backdrop-blur-sm">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            </div>
-        </div>
-        <div class="relative z-10">
-            <p class="text-4xl font-extrabold">{{ data.today_prod }}</p>
-            <p class="text-sm text-sky-100 mt-2 font-semibold">Bottles Manufactured Today</p>
-        </div>
-    </div>
+    </aside>
 
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <div class="absolute top-0 left-1/4 w-1/2 h-64 bg-blue-300/20 blur-[120px] pointer-events-none z-0"></div>
+
+        <header class="h-28 bg-white/60 backdrop-blur-xl border-b border-slate-200/50 flex items-center justify-between px-10 z-10 flex-shrink-0">
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-900 capitalize tracking-tight">{{ view }}</h2>
+                <p class="text-sm text-slate-500 font-medium mt-1">Welcome back to your workspace.</p>
+            </div>
+            
+            <div class="flex items-center gap-4 bg-white py-2 px-3 pl-6 rounded-full border border-slate-200 shadow-sm">
+                <div class="text-right">
+                    <p class="text-sm font-bold text-slate-900">{{ session.get('full_name', 'Student Name') }}</p>
+                    <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{{ session.get('role', 'Student') }}</p>
+                </div>
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 text-white flex items-center justify-center font-bold text-lg shadow-inner ring-4 ring-blue-50">
+                    {{ session.get('full_name', 'U')[0] }}
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-10 z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div class="card-premium p-8 flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Enrolled Courses</h3>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></div>
+                    </div>
+                    <div>
+                        <p class="text-4xl font-extrabold text-slate-900">0</p>
+                        <p class="text-sm text-blue-600 mt-2 font-semibold">Active this semester</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
-{% endblock %}
+</body>
+</html>
