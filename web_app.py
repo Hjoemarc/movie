@@ -51,7 +51,7 @@ def login():
     
     return render_template('login.html')
 
-# Replace your current /register route with this:
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     # If they visit /register directly via URL or clicking the link, show the HTML page
